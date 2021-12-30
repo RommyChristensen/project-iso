@@ -12,6 +12,17 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { getFirestore, collection, getDocs, addDoc } from 'firebase/firestore/lite';
+import { fire } from '../config/firebase';
+
+function addChat() {
+    const chat = {
+        "Dari" : "Denny",
+        "Pesan" : "testing"
+    };
+    const db = collection(fire, 'chat');
+    addDoc(db,chat);
+}
 
 function Copyright(props) {
     return (
@@ -79,7 +90,7 @@ export default function SignIn() {
                             autoComplete="current-password"
                         />
                         <Button
-                            type="submit"
+                            onClick={addChat}
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
