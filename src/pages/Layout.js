@@ -15,8 +15,20 @@ import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
+import Avatar from '@mui/material/Avatar';
+import Grid from '@mui/material/Grid';
 
-const drawerWidth = 240;
+const drawerWidth = 350;
+
+const fabStyle = {
+    position: 'absolute',
+    right: 16,
+    bottom: 16,
+    backgroundColor: "#FF7878"
+}
 
 const Layout = (props) => {
   const { window } = props;
@@ -28,28 +40,67 @@ const Layout = (props) => {
 
   const drawer = (
     <div>
-      <Toolbar />
+      <Toolbar>
+        <Grid container>
+            <Grid item xs={2}>
+                <Avatar sx={{ bgcolor: "#FF7878" }}>DS</Avatar>
+            </Grid>
+            <Grid item xs={9}>
+                <Typography variant="subtitle2" sx={{ marginLeft: 1, textStyle: "bold" }}>
+                    Denny Susastro
+                </Typography>
+                <Typography variant="body2" sx={{ marginLeft: 1 }}>
+                    Hey there i'm using chat in
+                </Typography>
+            </Grid>
+            <Grid item xs={1}>
+                <Fab size="small" color="white" aria-label="add" sx={{ backgroundColor: "white", boxShadow: 0 }}>
+                    <MoreVertIcon />
+                </Fab>
+            </Grid>
+        </Grid>
+      </Toolbar>
       <Divider />
       <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem button key={text}>
+        <ListItem button key="test">
             <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+              <Avatar sx={{ bgcolor: "#FF7878" }}>DY</Avatar>
             </ListItemIcon>
-            <ListItemText primary={text} />
+            <Grid direction="column">
+              <Typography variant="subtitle2" sx={{ marginLeft: 1, textStyle: "bold" }}>
+                Dave Yonathan
+              </Typography>
+              <Typography variant="body2" sx={{ marginLeft: 1 }}>
+                Lorem Ipsum dolor sit ame...
+              </Typography>
+            </Grid>
           </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem button key={text}>
+          <ListItem button key="test">
             <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+              <Avatar sx={{ bgcolor: "#FF7878" }}>DY</Avatar>
             </ListItemIcon>
-            <ListItemText primary={text} />
+            <Grid direction="column">
+              <Typography variant="subtitle2" sx={{ marginLeft: 1, textStyle: "bold" }}>
+                Dave Yonathan
+              </Typography>
+              <Typography variant="body2" sx={{ marginLeft: 1 }}>
+                Lorem Ipsum dolor sit ame...
+              </Typography>
+            </Grid>
           </ListItem>
-        ))}
+          <ListItem button key="test">
+            <ListItemIcon>
+              <Avatar sx={{ bgcolor: "#FF7878" }}>DY</Avatar>
+            </ListItemIcon>
+            <Grid direction="column">
+              <Typography variant="subtitle2" sx={{ marginLeft: 1, textStyle: "bold" }}>
+                Dave Yonathan
+              </Typography>
+              <Typography variant="body2" sx={{ marginLeft: 1 }}>
+                Lorem Ipsum dolor sit ame...
+              </Typography>
+            </Grid>
+          </ListItem>
       </List>
     </div>
   );
@@ -64,21 +115,28 @@ const Layout = (props) => {
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
+          backgroundColor: "#FF7878"
         }}
       >
         <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: 'none' } }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Responsive drawer
-          </Typography>
+            <Grid container>
+                <Grid item sx={{ width: '4%' }}>
+                    <Avatar sx={{ bgcolor: "#FFFFFF", color: "black" }}>DS</Avatar>
+                </Grid>
+                <Grid item sx={{ width: '86%' }}>
+                    <Typography variant="subtitle2" sx={{ marginLeft: 1, textStyle: "bold" }}>
+                        Denny Susastro
+                    </Typography>
+                    <Typography variant="body2" sx={{ marginLeft: 1 }}>
+                        Hey there i'm using chat in
+                    </Typography>
+                </Grid>
+                <Grid container item xs={1} justifyContent='flex-end' alignItems="right" sx={{ width: '10%' }}>
+                    <Fab size="small" aria-label="add" sx={{ backgroundColor: "#FF7878", boxShadow: 0 }}>
+                        <MoreVertIcon />
+                    </Fab>
+                </Grid>
+            </Grid>
         </Toolbar>
       </AppBar>
       <Box
@@ -111,7 +169,13 @@ const Layout = (props) => {
           open
         >
           {drawer}
+            <Fab size="medium" color="secondary" aria-label="add" sx={fabStyle}>
+                <AddIcon />
+            </Fab>
         </Drawer>
+      </Box>
+      <Box component="main">
+        Test
       </Box>
     </Box>
   );
