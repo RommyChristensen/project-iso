@@ -20,7 +20,10 @@ import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import Avatar from '@mui/material/Avatar';
 import Grid from '@mui/material/Grid';
-
+import { useState,useEffect } from 'react';
+import { query, collection, where,onSnapshot, getDocs,addDoc,orWhere } from 'firebase/firestore/lite';
+import { fire } from '../config/firebase';
+import DrawerUser from '../components/DrawerUser';
 const drawerWidth = 350;
 
 const fabStyle = {
@@ -30,84 +33,69 @@ const fabStyle = {
     backgroundColor: "#FF7878"
 }
 
+
 const Layout = (props) => {
+  
+  const [userActive, setUserActive] = useState({});
+  const [kontak, setKontak] = useState([{}]);
   const { window } = props;
   const [ mobileOpen, setMobileOpen ] = React.useState(false);
-
+  
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+  
+  function GetActive() {
+    //yang dibutuhkan username dan harus unique
+    useEffect(async() => {
+      const q = query(collection(fire, 'user'), where('username',"==", 'denny'));
+        const data =  await getDocs(q);
+        data.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          setUserActive(doc.data());
+         
+        });
+       // GetKontak();
+    },[])
+  }
+  
+  async function GetKontak() {
+    //yang dibutuhkan username dan harus unique
+   
+        const q = query(collection(fire, 'kontak'));
+        const data =  await getDocs(q);
+        var kt=[];
+        data.forEach(function async (doc) {
+          // doc.data() is never undefined for query doc snapshots
+            var dt = doc.data();
+            var us;
+            if(dt.invited_by==userActive.username){
+              us = dt.invited_by;
+            }
+            else if(dt.invited_id==userActive.username){
+              us = dt.invited_id;
+            }
+            kt.push({
+              nama : us
+            });
+        });
+        setKontak(kt);
 
-  const drawer = (
-    <div>
-      <Toolbar>
-        <Grid container>
-            <Grid item xs={2}>
-                <Avatar sx={{ bgcolor: "#FF7878" }}>DS</Avatar>
-            </Grid>
-            <Grid item xs={9}>
-                <Typography variant="subtitle2" sx={{ marginLeft: 1, textStyle: "bold" }}>
-                    Denny Susastro
-                </Typography>
-                <Typography variant="body2" sx={{ marginLeft: 1 }}>
-                    Hey there i'm using chat in
-                </Typography>
-            </Grid>
-            <Grid item xs={1}>
-                <Fab size="small" color="white" aria-label="add" sx={{ backgroundColor: "white", boxShadow: 0 }}>
-                    <MoreVertIcon />
-                </Fab>
-            </Grid>
-        </Grid>
-      </Toolbar>
-      <Divider />
-      <List>
-        <ListItem button key="test">
-            <ListItemIcon>
-              <Avatar sx={{ bgcolor: "#FF7878" }}>DY</Avatar>
-            </ListItemIcon>
-            <Grid direction="column">
-              <Typography variant="subtitle2" sx={{ marginLeft: 1, textStyle: "bold" }}>
-                Dave Yonathan
-              </Typography>
-              <Typography variant="body2" sx={{ marginLeft: 1 }}>
-                Lorem Ipsum dolor sit ame...
-              </Typography>
-            </Grid>
-          </ListItem>
-          <ListItem button key="test">
-            <ListItemIcon>
-              <Avatar sx={{ bgcolor: "#FF7878" }}>DY</Avatar>
-            </ListItemIcon>
-            <Grid direction="column">
-              <Typography variant="subtitle2" sx={{ marginLeft: 1, textStyle: "bold" }}>
-                Dave Yonathan
-              </Typography>
-              <Typography variant="body2" sx={{ marginLeft: 1 }}>
-                Lorem Ipsum dolor sit ame...
-              </Typography>
-            </Grid>
-          </ListItem>
-          <ListItem button key="test">
-            <ListItemIcon>
-              <Avatar sx={{ bgcolor: "#FF7878" }}>DY</Avatar>
-            </ListItemIcon>
-            <Grid direction="column">
-              <Typography variant="subtitle2" sx={{ marginLeft: 1, textStyle: "bold" }}>
-                Dave Yonathan
-              </Typography>
-              <Typography variant="body2" sx={{ marginLeft: 1 }}>
-                Lorem Ipsum dolor sit ame...
-              </Typography>
-            </Grid>
-          </ListItem>
-      </List>
-    </div>
+  }
+  
+  {GetActive()}
+
+  const listItems = kontak.map((number) =>
+    <li></li>
   );
+
 
   const container = window !== undefined ? () => window().document.body : undefined;
 
+ 
+
   return (
+    
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <AppBar
@@ -158,7 +146,7 @@ const Layout = (props) => {
             '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
           }}
         >
-          {drawer}
+          <DrawerUser userActive={userActive}></DrawerUser>
         </Drawer>
         <Drawer
           variant="permanent"
@@ -168,7 +156,7 @@ const Layout = (props) => {
           }}
           open
         >
-          {drawer}
+          <DrawerUser userActive={userActive}></DrawerUser>
             <Fab size="medium" color="secondary" aria-label="add" sx={fabStyle}>
                 <AddIcon />
             </Fab>

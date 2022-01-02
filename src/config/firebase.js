@@ -6,13 +6,12 @@ import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBA7E_BO0GewSGoGU3X7OABw_o3dsn4yi8",
-  authDomain: "proyek-e7d02.firebaseapp.com",
-  databaseURL: "https://proyek-e7d02-default-rtdb.firebaseio.com",
-  projectId: "proyek-e7d02",
-  storageBucket: "proyek-e7d02.appspot.com",
-  messagingSenderId: "615118665553",
-  appId: "1:615118665553:web:c8c588122f4e70a6ae4570"
+  apiKey: "AIzaSyCQ_L3c3EZ96P98246k5QMyuniEW68U3Z0",
+  authDomain: "chatin-ea635.firebaseapp.com",
+  projectId: "chatin-ea635",
+  storageBucket: "chatin-ea635.appspot.com",
+  messagingSenderId: "784170283393",
+  appId: "1:784170283393:web:c522503e49f66858b3f880"
 };
 
 
