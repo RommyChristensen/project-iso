@@ -4,7 +4,6 @@ import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 
 const Nav = ()=>{
-
     return (
         <div>
             <Link href="/register">Register</Link>
