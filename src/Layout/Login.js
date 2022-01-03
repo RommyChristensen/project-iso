@@ -38,17 +38,22 @@ async function getAllUser(){
 }
 
 async function ceklogin(username, password) {
-
     let listUser = getAllUser();
-
-    (await listUser).forEach(function (user){
-        console.log(user)
-        if(user.username == username && password == user.password){
-
-            return true
+    let valid =  false;
+    (await listUser).forEach( function async (data){
+        let user = data.user
+            console.log({
+                username : username ,
+                password : password,
+                user_username :user.username,
+                user_password :user.password
+            })
+        if(user.username == username && password === user.password){
+            console.log('bener')
+            valid= true
         }
     })
-    return false
+    return valid
 }
 
 
@@ -73,11 +78,11 @@ async function  handleSubmit(event){
     // eslint-disable-next-line no-console
     let  username=  data.get('username')
     let  password=  data.get('password')
-
-    if(ceklogin(username,password)){
-        console.log('masok')
+    let valid =await ceklogin(username,password)
+    if(valid){
+        window.location ='/home'
     }else{
-        console.log('gagal')
+        alert("Username atau password tidak ditemukan")
     }
 
     // console.log(ceklogin(username, password))
