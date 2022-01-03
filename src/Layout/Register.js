@@ -3,8 +3,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -12,6 +10,16 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { CircularProgress } from '@mui/material';
+import Toastify from 'toastify-js';
+
+// firebase
+import { query, collection, where, onSnapshot, getDocs, addDoc, orWhere } from 'firebase/firestore/lite';
+import { fire } from '../config/firebase';
+
+// style
+import "toastify-js/src/toastify.css";
+import { useNavigate } from 'react-router-dom';
 
 function Copyright(props) {
     return (
@@ -28,17 +36,74 @@ function Copyright(props) {
 
 const theme = createTheme();
 export default function SignUp() {
+    const navigate = useNavigate();
+    const [submitForm, setSubmitForm] = React.useState(false);
 
-    const handleSubmit = (event) => {
+    const checkUsername = async (username) => {
+        const q = query(collection(fire, 'user'), where('username', '==', username));
+        const data = await getDocs(q);
+
+        if(data.docs.length > 0){
+            return false;
+        }
+
+        return true;
+    }
+
+    const insertNewUser = async (firstname, lastname, password, username) => {
+        const user = {
+            firstname, lastname, password, username
+        };
+        const db = collection(fire, 'user');
+        const res = await addDoc(db, user);
+
+        return res;
+    }
+
+    const handleSubmit = async (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        // eslint-disable-next-line no-console
-        console.log({
-            firstName: data.get('firstName'),
-            lastName: data.get('lastName'),
-            password: data.get('password'),
-            username: data.get('username'),
-        });
+        setSubmitForm(true);
+
+        const firstname = data.get('firstName');
+        const lastname = data.get('lastName');
+        const password = data.get('password');
+        const username = data.get('username');
+        
+        if(firstname == '' || lastname == '' || password == '' || username == ''){
+            Toastify({
+                text: "All Field is required",
+                duration: 1000,
+                newWindow: true,
+                gravity: "top", // `top` or `bottom`
+                position: "right", // `left`, `center` or `right`
+                stopOnFocus: true, // Prevents dismissing of toast on hover
+                style: {
+                  background: "#FF7171",
+                }
+            }).showToast();
+
+            setSubmitForm(false);
+            return;
+        }
+        
+        if(await checkUsername(data.get('username'))){
+            await insertNewUser(firstname, lastname, password, username);
+            navigate('/home', { replace: true });
+        }else{
+            Toastify({
+                text: "Username already been used",
+                duration: 1000,
+                newWindow: true,
+                gravity: "top", // `top` or `bottom`
+                position: "right", // `left`, `center` or `right`
+                stopOnFocus: true, // Prevents dismissing of toast on hover
+                style: {
+                  background: "#FF7171",
+                }
+            }).showToast();
+        }
+        setSubmitForm(false);
     };
 
     return (
@@ -53,7 +118,7 @@ export default function SignUp() {
                         alignItems: 'center',
                     }}
                 >
-                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                    <Avatar sx={{ m: 1, bgcolor: "#FF7878" }}>
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
@@ -110,7 +175,18 @@ export default function SignUp() {
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
+                            disabled={submitForm}
+                            color="success"
                         >
+                            {
+                                submitForm && 
+                                <CircularProgress
+                                    size={15}
+                                    sx={{
+                                        position: 'absolute'
+                                    }}
+                                />
+                            }
                             Sign Up
                         </Button>
                         <Grid container justifyContent="flex-end">
