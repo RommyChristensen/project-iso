@@ -12,7 +12,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { getFirestore, collection, getDocs, addDoc } from 'firebase/firestore/lite';
+import {getFirestore, collection, getDocs, addDoc, query} from 'firebase/firestore/lite';
 import { fire } from '../config/firebase';
 
 function addChat() {
@@ -23,6 +23,36 @@ function addChat() {
     const db = collection(fire, 'chat');
     addDoc(db,chat);
 }
+async function getAllUser(){
+    const q = query(collection(fire, 'user'));
+    const data =  await getDocs(q);
+    var listUser=[];
+    data.forEach(function async (doc) {
+        // doc.data() is never undefined for query doc snapshots
+        var user = doc.data();
+        listUser.push({
+            user : user
+        });
+    });
+    return listUser;
+}
+
+async function ceklogin(username, password) {
+
+    let listUser = getAllUser();
+
+    (await listUser).forEach(function (user){
+        console.log(user)
+        if(user.username == username && password == user.password){
+
+            return true
+        }
+    })
+    return false
+}
+
+
+const theme = createTheme();
 
 function Copyright(props) {
     return (
@@ -37,18 +67,24 @@ function Copyright(props) {
     );
 }
 
-const theme = createTheme();
+async function  handleSubmit(event){
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    // eslint-disable-next-line no-console
+    let  username=  data.get('username')
+    let  password=  data.get('password')
 
-export default function SignIn() {
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        // eslint-disable-next-line no-console
-        console.log({
-            username: data.get('username'),
-            password: data.get('password'),
-        });
-    };
+    if(ceklogin(username,password)){
+        console.log('masok')
+    }else{
+        console.log('gagal')
+    }
+
+    // console.log(ceklogin(username, password))
+};
+
+
+const Login = ()=>{
 
     return (
         <ThemeProvider theme={theme}>
@@ -111,3 +147,7 @@ export default function SignIn() {
         </ThemeProvider>
     );
 }
+
+
+
+export default Login;

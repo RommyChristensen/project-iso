@@ -62,7 +62,7 @@ const Layout = (props) => {
   async function GetKontak() {
     //yang dibutuhkan username dan harus unique
    
-        const q = query(collection(fire, 'kontak'));
+        const q = query(collection(fire, 'user'));
         const data =  await getDocs(q);
         var kt=[];
         data.forEach(function async (doc) {
