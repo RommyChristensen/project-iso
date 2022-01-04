@@ -14,6 +14,8 @@ import Grid from '@mui/material/Grid';
 import { useState,useEffect } from 'react';
 
 import DrawerUser from '../components/DrawerUser';
+import { UserContext } from '../config/UserContext';
+import { useNavigate } from 'react-router-dom';
 const drawerWidth = 350;
 
 const fabStyle = {
@@ -25,18 +27,18 @@ const fabStyle = {
 
 
 const Layout = (props) => {
-  
-  const [userActive, setUserActive] = useState(props.userActive);
-  const [room, setRoom] = useState([{}]);
+
+   // hooks
+  const {userActive,setUserActive} = React.useContext(UserContext);
+  const navigate = useNavigate();
   const { window } = props;
   const [ mobileOpen, setMobileOpen ] = React.useState(false);
   
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-
+ 
   const container = window !== undefined ? () => window().document.body : undefined;
-
 
   return (
     
@@ -90,7 +92,7 @@ const Layout = (props) => {
             '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
           }}
         >
-          <DrawerUser userActive={userActive}></DrawerUser>
+          <DrawerUser ></DrawerUser>
         </Drawer>
         <Drawer
           variant="permanent"
@@ -100,7 +102,7 @@ const Layout = (props) => {
           }}
           open
         >
-          <DrawerUser userActive={userActive}></DrawerUser>
+          <DrawerUser ></DrawerUser>
             <Fab size="medium" color="secondary" aria-label="add" sx={fabStyle}>
                 <AddIcon />
             </Fab>

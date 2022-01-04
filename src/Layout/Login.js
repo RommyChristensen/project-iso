@@ -14,12 +14,13 @@ import {getFirestore, collection, getDocs, addDoc, query} from 'firebase/firesto
 import { fire } from '../config/firebase';
 import { UserContext } from '../config/UserContext';
 import { useNavigate } from 'react-router-dom';
+import getRoom from '../store/Service';
 
 const Login = ()=>{
 
     // hooks
 
-    const { setUser } = React.useContext(UserContext);
+    const { setUser,setRoom } = React.useContext(UserContext);
     const navigate = useNavigate();
 
     // functions
@@ -43,13 +44,7 @@ const Login = ()=>{
         let valid =  false;
         let userOutput;
         (await listUser).forEach( function async (data){
-            let user = data.user
-            console.log({
-                username : username ,
-                password : password,
-                user_username :user.username,
-                user_password :user.password
-            })
+            let user = data.user;
             if(user.username == username && password === user.password){
                 valid = true;
                 userOutput = user;
@@ -86,7 +81,9 @@ const Login = ()=>{
         let valid = await ceklogin(username,password)
         if(valid !== false){
             setUser(valid);
+            setRoom(await getRoom(username));
             navigate('/home');
+            
         }else{
             alert("Username atau password tidak ditemukan")
         }
