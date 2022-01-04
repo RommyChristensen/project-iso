@@ -21,6 +21,9 @@ import { fire } from '../config/firebase';
 import "toastify-js/src/toastify.css";
 import { useNavigate } from 'react-router-dom';
 
+// context
+import { UserContext } from '../config/UserContext';
+
 function Copyright(props) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -35,8 +38,10 @@ function Copyright(props) {
 }
 
 const theme = createTheme();
+
 export default function SignUp() {
     const navigate = useNavigate();
+    const { setUser } = React.useContext(UserContext);
     const [submitForm, setSubmitForm] = React.useState(false);
 
     const checkUsername = async (username) => {
@@ -50,12 +55,14 @@ export default function SignUp() {
         return true;
     }
 
-    const insertNewUser = async (firstname, lastname, password, username) => {
+    const insertNewUser = async (firstname, lastname, password, username, bio) => {
         const user = {
-            firstname, lastname, password, username
+            firstname, lastname, password, username, bio, contacts: []
         };
         const db = collection(fire, 'user');
         const res = await addDoc(db, user);
+
+        setUser(user);
 
         return res;
     }
@@ -69,6 +76,7 @@ export default function SignUp() {
         const lastname = data.get('lastName');
         const password = data.get('password');
         const username = data.get('username');
+        const bio = "I am using Chat In";
         
         if(firstname == '' || lastname == '' || password == '' || username == ''){
             Toastify({
@@ -88,7 +96,7 @@ export default function SignUp() {
         }
         
         if(await checkUsername(data.get('username'))){
-            await insertNewUser(firstname, lastname, password, username);
+            await insertNewUser(firstname, lastname, password, username,bio);
             navigate('/home', { replace: true });
         }else{
             Toastify({
