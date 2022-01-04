@@ -18,6 +18,7 @@ import Fade from '@mui/material/Fade';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import ListContacts from './ListContacts';
+import SearchUser from './SearchUser';
 import Skeleton from '@mui/material/Skeleton';
 import { UserContext } from '../config/UserContext';
 
@@ -134,7 +135,7 @@ const DrawerUser = (props) => {
               <Tab label="Search User" />
             </Tabs>
             {(value == 0) && <ListContacts />}
-            {(value == 1) && <Typography>Tab 2</Typography>}
+            {(value == 1) && <SearchUser />}
           </Box>
         </Fade>
       </Modal>
