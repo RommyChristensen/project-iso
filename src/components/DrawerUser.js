@@ -20,6 +20,7 @@ import Tab from '@mui/material/Tab';
 import ListContacts from './ListContacts';
 import Skeleton from '@mui/material/Skeleton';
 import { UserContext } from '../config/UserContext';
+import { render } from '@testing-library/react';
 
 const modalStyle = {
   position: 'absolute',
@@ -33,8 +34,7 @@ const modalStyle = {
 };
 
 const DrawerUser = (props) => {
-    const { userActive } = React.useContext(UserContext);
-
+    const { userActive,room,setRoom } = React.useContext(UserContext);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
 
@@ -55,14 +55,14 @@ const DrawerUser = (props) => {
     const handleMenuClose = () => {
         setAnchorEl(null);
     };
-
+    console.log(room);
     //navbar
     return (
     <div>
       <Toolbar>
         <Grid container>
             <Grid item xs={2}>
-                <Avatar sx={{ bgcolor: "#FF7878" }}>DS</Avatar>
+                <Avatar sx={{ bgcolor: "#FF7878" }}>{userActive.firstname.substr(0,1)+userActive.lastname.substr(0,1)}</Avatar>
             </Grid>
             <Grid item xs={9}>
               <Typography variant="subtitle2" sx={{ marginLeft: 1, textStyle: "bold" }}>
@@ -94,20 +94,26 @@ const DrawerUser = (props) => {
       </Toolbar>
       <Divider />
       <List>
+       {
+         
+         room.map((item,i)=>(
         
-        <ListItem button key="test">
+          <ListItem button key="test">
             <ListItemIcon>
-              <Avatar sx={{ bgcolor: "#FF7878" }}>DY</Avatar>
+              <Avatar sx={{ bgcolor: "#FF7878" }}>{item.firstname.substr(0,1)+item.lastname.substr(0,1)}</Avatar>
             </ListItemIcon>
             <Grid container direction="column">
               <Typography variant="subtitle2" sx={{ marginLeft: 1, textStyle: "bold" }}>
-                Dave Yonathan
+                {item.firstname+" "+item.lastname}
               </Typography>
               <Typography variant="body2" sx={{ marginLeft: 1 }}>
-                Lorem Ipsum dolor sit ame...
+                {item.chats.message}
               </Typography>
             </Grid>
           </ListItem>
+         )
+        )
+       }
       </List>
 
       <Modal

@@ -2,5 +2,7 @@ import * as React from 'react';
 
 export const UserContext = React.createContext({
     userActive: {},
-    setUser: () => {}
+    setUser: () => {},
+    room:{},
+    setRoom:() => {},
 });
