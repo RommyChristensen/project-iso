@@ -8,27 +8,25 @@ import Login from "./Layout/Login";
 import {BrowserRouter as Router , Route, Link, Routes} from 'react-router-dom';
 import React from "react";
 
-function App() {
-  // const firebase = useFirebase();
+import { UserContext } from "./config/UserContext";
 
-  // const click = () => {
-  //   firebase.push('chat', { message: "hello world" })
-  // }
-  
-  const userActive = React.createContext();
+function App() {
+  const [userActive, setUserActive] = React.useState({});
   return (
     <div className="App">
-      
+      <UserContext.Provider value={{
+        userActive,
+        setUser: setUserActive
+      }}>
         <Router>
-            <Routes>
-                <Route exact path={'/register'} element={<Register/> }></Route>
-                <Route exact path={'/login'} element={<Login/> }></Route>
-                <Route exact path={'/home'} element={<Layout/> }></Route>
-                <Route exact path={'/'} element={<Login/> }></Route>
-            </Routes>
+          <Routes>
+            <Route exact path={'/register'} element={<Register/> }></Route>
+            <Route exact path={'/login'} element={<Login/> }></Route>
+            <Route exact path={'/home'} element={<Layout/> }></Route>
+            <Route exact path={'/'} element={<Login/> }></Route>
+          </Routes>
         </Router>
-
-      {/*<Layout />*/}
+      </UserContext.Provider>
     </div>
   );
 }

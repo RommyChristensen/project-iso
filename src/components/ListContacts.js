@@ -4,7 +4,7 @@ const ListContacts = (props) => {
     return (
         <>
             <Box sx={{ height: 10, width: 10 }}></Box>
-            <ListItem button key="test">
+            <ListItem button key="qwer">
                 <ListItemIcon>
                 <Avatar sx={{ bgcolor: "#FF7878" }}>DY</Avatar>
                 </ListItemIcon>
@@ -17,7 +17,7 @@ const ListContacts = (props) => {
                 </Typography>
                 </Grid>
             </ListItem>
-            <ListItem button key="test">
+            <ListItem button key="try">
                 <ListItemIcon>
                 <Avatar sx={{ bgcolor: "#FF7878" }}>DY</Avatar>
                 </ListItemIcon>

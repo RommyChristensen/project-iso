@@ -18,8 +18,8 @@ import Fade from '@mui/material/Fade';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import ListContacts from './ListContacts';
-import Stack from '@mui/material/Stack';
 import Skeleton from '@mui/material/Skeleton';
+import { UserContext } from '../config/UserContext';
 
 const modalStyle = {
   position: 'absolute',
@@ -33,6 +33,8 @@ const modalStyle = {
 };
 
 const DrawerUser = (props) => {
+    const { userActive } = React.useContext(UserContext);
+
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
 
@@ -64,10 +66,10 @@ const DrawerUser = (props) => {
             </Grid>
             <Grid item xs={9}>
               <Typography variant="subtitle2" sx={{ marginLeft: 1, textStyle: "bold" }}>
-                { Object.keys(props.userActive).length == 0 ? <Skeleton /> : props.userActive.nickname}
+                { Object.keys(userActive).length == 0 ? <Skeleton /> : userActive.username}
               </Typography>
               <Typography variant="body2" sx={{ marginLeft: 1 }}>
-                { Object.keys(props.userActive).length == 0 ? <Skeleton /> : props.userActive.bio}
+                { Object.keys(userActive).length == 0 ? <Skeleton /> : userActive.bio}
               </Typography>
             </Grid>
             <Grid item xs={1}>

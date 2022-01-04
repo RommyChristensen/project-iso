@@ -3,8 +3,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -14,82 +12,95 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {getFirestore, collection, getDocs, addDoc, query} from 'firebase/firestore/lite';
 import { fire } from '../config/firebase';
+import { UserContext } from '../config/UserContext';
+import { useNavigate } from 'react-router-dom';
 
-function addChat() {
-    const chat = {
-        "Dari" : "Denny",
-        "Pesan" : "testing"
-    };
-    const db = collection(fire, 'chat');
-    addDoc(db,chat);
-}
-async function getAllUser(){
-    const q = query(collection(fire, 'user'));
-    const data =  await getDocs(q);
-    var listUser=[];
-    data.forEach(function async (doc) {
-        // doc.data() is never undefined for query doc snapshots
-        var user = doc.data();
-        listUser.push({
-            user : user
+const Login = ()=>{
+
+    // hooks
+
+    const { setUser } = React.useContext(UserContext);
+    const navigate = useNavigate();
+
+    // functions
+
+    function addChat() {
+        const chat = {
+            "Dari" : "Denny",
+            "Pesan" : "testing"
+        };
+        const db = collection(fire, 'chat');
+        addDoc(db,chat);
+    }
+    
+    async function getAllUser(){
+        const q = query(collection(fire, 'user'));
+        const data =  await getDocs(q);
+        var listUser=[];
+        data.forEach(function async (doc) {
+            // doc.data() is never undefined for query doc snapshots
+            var user = doc.data();
+            listUser.push({
+                user : user
+            });
         });
-    });
-    return listUser;
-}
-
-async function ceklogin(username, password) {
-    let listUser = getAllUser();
-    let valid =  false;
-    (await listUser).forEach( function async (data){
-        let user = data.user
+        return listUser;
+    }
+    
+    async function ceklogin(username, password) {
+        let listUser = getAllUser();
+        let valid =  false;
+        let userOutput;
+        (await listUser).forEach( function async (data){
+            let user = data.user
             console.log({
                 username : username ,
                 password : password,
                 user_username :user.username,
                 user_password :user.password
             })
-        if(user.username == username && password === user.password){
-            console.log('bener')
-            valid= true
-        }
-    })
-    return valid
-}
+            if(user.username == username && password === user.password){
+                valid = true;
+                userOutput = user;
+            }
+        })
 
-
-const theme = createTheme();
-
-function Copyright(props) {
-    return (
-        <Typography variant="body2" color="text.secondary" align="center" {...props}>
-            {'Copyright © '}
-            <Link color="inherit" href="https://mui.com/">
-                Your Website
-            </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
-}
-
-async function  handleSubmit(event){
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    let  username=  data.get('username')
-    let  password=  data.get('password')
-    let valid =await ceklogin(username,password)
-    if(valid){
-        window.location ='/home'
-    }else{
-        alert("Username atau password tidak ditemukan")
+        if(valid) return userOutput;
+        
+        return valid;
     }
+    
+    
+    const theme = createTheme();
+    
+    function Copyright(props) {
+        return (
+            <Typography variant="body2" color="text.secondary" align="center" {...props}>
+                {'Copyright © '}
+                <Link color="inherit" href="https://mui.com/">
+                    Your Website
+                </Link>{' '}
+                {new Date().getFullYear()}
+                {'.'}
+            </Typography>
+        );
+    }
+    
+    async function  handleSubmit(event){
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        // eslint-disable-next-line no-console
+        let username = data.get('username')
+        let password = data.get('password')
+        let valid = await ceklogin(username,password)
+        if(valid !== false){
+            setUser(valid);
+            navigate('/home');
+        }else{
+            alert("Username atau password tidak ditemukan")
+        }
+    };
 
-    // console.log(ceklogin(username, password))
-};
-
-
-const Login = ()=>{
 
     return (
         <ThemeProvider theme={theme}>
