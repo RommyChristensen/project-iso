@@ -24,15 +24,6 @@ const Login = ()=>{
 
     // functions
 
-    function addChat() {
-        const chat = {
-            "Dari" : "Denny",
-            "Pesan" : "testing"
-        };
-        const db = collection(fire, 'chat');
-        addDoc(db,chat);
-    }
-    
     async function getAllUser(){
         const q = query(collection(fire, 'user'));
         const data =  await getDocs(q);

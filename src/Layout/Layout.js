@@ -12,8 +12,7 @@ import AddIcon from '@mui/icons-material/Add';
 import Avatar from '@mui/material/Avatar';
 import Grid from '@mui/material/Grid';
 import { useState,useEffect } from 'react';
-import { query, collection, where, onSnapshot, getDocs, addDoc, orWhere } from 'firebase/firestore/lite';
-import { fire } from '../config/firebase';
+
 import DrawerUser from '../components/DrawerUser';
 const drawerWidth = 350;
 
@@ -27,63 +26,17 @@ const fabStyle = {
 
 const Layout = (props) => {
   
-  const [userActive, setUserActive] = useState({});
-  const [kontak, setKontak] = useState([{}]);
+  const [userActive, setUserActive] = useState(props.userActive);
+  const [room, setRoom] = useState([{}]);
   const { window } = props;
   const [ mobileOpen, setMobileOpen ] = React.useState(false);
   
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-  
-  function GetActive() {
-    //yang dibutuhkan username dan harus unique
-    useEffect(async() => {
-      const q = query(collection(fire, 'user'), where('username',"==", 'denny'));
-        const data =  await getDocs(q);
-        data.forEach((doc) => {
-          // doc.data() is never undefined for query doc snapshots
-          setUserActive(doc.data());
-         
-        });
-       // GetKontak();
-    },[])
-  }
-  
-  async function GetKontak() {
-    //yang dibutuhkan username dan harus unique
-   
-        const q = query(collection(fire, 'user'));
-        const data =  await getDocs(q);
-        var kt=[];
-        data.forEach(function async (doc) {
-          // doc.data() is never undefined for query doc snapshots
-            var dt = doc.data();
-            var us;
-            if(dt.invited_by==userActive.username){
-              us = dt.invited_by;
-            }
-            else if(dt.invited_id==userActive.username){
-              us = dt.invited_id;
-            }
-            kt.push({
-              nama : us
-            });
-        });
-        setKontak(kt);
-
-  }
-  
-  {GetActive()}
-
-  const listItems = kontak.map((number) =>
-    <li></li>
-  );
-
 
   const container = window !== undefined ? () => window().document.body : undefined;
 
- 
 
   return (
     

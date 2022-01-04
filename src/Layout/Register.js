@@ -50,9 +50,9 @@ export default function SignUp() {
         return true;
     }
 
-    const insertNewUser = async (firstname, lastname, password, username) => {
+    const insertNewUser = async (firstname, lastname, password, username,bio) => {
         const user = {
-            firstname, lastname, password, username
+            firstname, lastname, password, username,bio
         };
         const db = collection(fire, 'user');
         const res = await addDoc(db, user);
@@ -69,6 +69,7 @@ export default function SignUp() {
         const lastname = data.get('lastName');
         const password = data.get('password');
         const username = data.get('username');
+        const bio = "I am using Chat In";
         
         if(firstname == '' || lastname == '' || password == '' || username == ''){
             Toastify({
@@ -88,7 +89,7 @@ export default function SignUp() {
         }
         
         if(await checkUsername(data.get('username'))){
-            await insertNewUser(firstname, lastname, password, username);
+            await insertNewUser(firstname, lastname, password, username,bio);
             navigate('/home', { replace: true });
         }else{
             Toastify({
