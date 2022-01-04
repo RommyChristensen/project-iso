@@ -75,16 +75,10 @@ const Layout = (props) => {
   }
   
   {GetActive()}
-
   const listItems = kontak.map((number) =>
     <li></li>
   );
-
-
   const container = window !== undefined ? () => window().document.body : undefined;
-
- 
-
   return (
     
     <Box sx={{ display: 'flex' }}>

@@ -38,6 +38,7 @@ const DrawerUser = (props) => {
 
     const [value, setValue] = React.useState(0);
     const [openModal, setOpenModal] = React.useState(false);
+    const [openModalProfile, setOpenModalProfile] = React.useState(false);
 
     const handleChange = (event, newValue) => {
       console.log(newValue);
@@ -46,6 +47,8 @@ const DrawerUser = (props) => {
 
     const handleModalOpen = () => setOpenModal(true);
     const handleModalClose = () => setOpenModal(false);
+    const handleOpenModalProfile= () => setOpenModalProfile(true);
+    const handleCloseModalProfile= () => setOpenModalProfile(false);
 
     const handleMenuClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -53,6 +56,10 @@ const DrawerUser = (props) => {
     const handleMenuClose = () => {
         setAnchorEl(null);
     };
+
+    const logoutHandler = ()=>{
+        window.location = '/login'
+    }
 
     //navbar
     return (
@@ -84,15 +91,21 @@ const DrawerUser = (props) => {
                   }}
                 >
                   <MenuItem onClick={handleModalOpen}>Contacts</MenuItem>
-                  <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-                  <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+                  <MenuItem onClick={handleOpenModalProfile}>Profile</MenuItem>
+                  <MenuItem onClick={()=>logoutHandler()}>Logout</MenuItem>
                 </Menu>
+
+
+
             </Grid>
         </Grid>
       </Toolbar>
+
+
+
+
       <Divider />
       <List>
-        
         <ListItem button key="test">
             <ListItemIcon>
               <Avatar sx={{ bgcolor: "#FF7878" }}>DY</Avatar>
@@ -136,6 +149,26 @@ const DrawerUser = (props) => {
           </Box>
         </Fade>
       </Modal>
+
+        <Modal
+            aria-labelledby="transition-modal-title"
+            aria-describedby="transition-modal-description"
+            open={openModalProfile}
+            onClose={handleCloseModalProfile}
+            closeAfterTransition
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+                timeout: 500,
+            }}
+        >
+            <Fade in={openModalProfile}>
+                <Box sx={modalStyle}>
+                    <Avatar sx={{ bgcolor: "#FF7878" }}>DS</Avatar>
+                    <h1>Hi Denny Unyu</h1>
+                    <p>Hi there i'm using chat in</p>
+                </Box>
+            </Fade>
+        </Modal>
     </div>
     )
   };
