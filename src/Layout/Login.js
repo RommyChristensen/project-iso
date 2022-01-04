@@ -52,7 +52,6 @@ const Login = ()=>{
         })
 
         if(valid) return userOutput;
-        
         return valid;
     }
     
