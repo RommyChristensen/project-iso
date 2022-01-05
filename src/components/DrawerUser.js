@@ -25,7 +25,7 @@ import { UserContext } from '../config/UserContext';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import TextField from '@mui/material/TextField';
 import { render } from '@testing-library/react';
-import {updateDoc, doc, getDoc, collection, addDoc} from 'firebase/firestore/lite';
+import {updateDoc, doc, getDoc, collection, addDoc,where,query,getDocs} from 'firebase/firestore/lite';
 import { fire } from '../config/firebase';
 import Button from '@mui/material/Button';
 import getRoom from "../store/Service";
@@ -193,7 +193,7 @@ const DrawerUser = (props) => {
                         </Typography>
                       </Grid>
                       <Grid item xs={2}>
-                        <FormControlLabel value="1" control={<Radio />} onClick={() =>chooseContact(item)} label="" />
+                        <FormControlLabel value={item.username} control={<Radio />} onClick={() =>chooseContact(item)} label="" />
                       </Grid>
                   </Grid>
               </ListItem>
@@ -213,23 +213,45 @@ const DrawerUser = (props) => {
       });
       return ada;
     }
+    function SortingData(data) {
+      for (let i = 0; i < data.length-1; i++) {
+        for (let j = i+1; j < data.length; j++) {
+          if(data[i].chats[data[i].chats.length-1].sent_time<=data[j].chats[data[j].chats.length-1].sent_time){
+            var dt = data[i];
+            data[i] = data[j];
+            data[j] = dt;
+          }
+        }
+      }
+      return data;
+    }
     async function  handleSubmit(event){
       event.preventDefault();
       const data = new FormData(event.currentTarget);
       // eslint-disable-next-line no-console
       let chats = data.get('message');
-      let newRoom = {
-        "user1":userActive.username,
-        "user2":selectContact.username,
-        "chats":[
-          {
-            "from":userActive.username,
-            "message":chats,
-            "read":false,
-            "sent_time":new Date().toLocaleString()
-          }
-        ]
-      }
+      let newRoom;
+      const data_user = await getDocs(query(collection(fire, 'user'),where('username','==',selectContact.username)));
+      (await data_user).forEach(function(item2) {
+        newRoom = {
+          "user1":userActive.username,
+          "user2":selectContact.username,
+          "fname":item2.data().firstname,
+          "lname":item2.data().lastname,
+          "chats":[
+            {
+              "from":userActive.username,
+              "message":chats,
+              "read":false,
+              "sent_time":new Date().toLocaleString()
+            }
+          ]
+        }
+      });
+      
+      room.push(newRoom);
+      SortingData(room);
+      setRoom(room);
       const db = collection(fire, 'room');
       const res = await addDoc(db, newRoom);
       handleCloseModalNewRoom();

@@ -14,7 +14,7 @@ import { fire } from '../config/firebase';
         }
         
     });
-    sorting(room);
+    SortingData(room);
     (await room).forEach(async function (item) {
         var user_id;
         // doc.data() is never undefined for query doc snapshots
@@ -33,7 +33,7 @@ import { fire } from '../config/firebase';
     });
     return room;
   }
-  function sorting(data) {
+  function SortingData(data) {
     for (let i = 0; i < data.length-1; i++) {
       for (let j = i+1; j < data.length; j++) {
         if(data[i].chats[data[i].chats.length-1].sent_time<=data[j].chats[data[j].chats.length-1].sent_time){
