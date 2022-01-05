@@ -25,9 +25,10 @@ import { UserContext } from '../config/UserContext';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import TextField from '@mui/material/TextField';
 import { render } from '@testing-library/react';
-import { updateDoc, doc } from 'firebase/firestore/lite';
+import {updateDoc, doc, getDoc} from 'firebase/firestore/lite';
 import { fire } from '../config/firebase';
 import Button from '@mui/material/Button';
+import getRoom from "../store/Service";
 
 const modalStyle = {
   position: 'absolute',
@@ -41,6 +42,17 @@ const modalStyle = {
   height: 600,
   overflow: 'scroll'
 };
+
+const modalProfileStyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 600,
+    bgcolor: 'background.paper',
+    boxShadow: 24,
+    p: 2,
+};
 const fabStyle = {
   position: 'absolute',
   right: 16,
@@ -49,7 +61,7 @@ const fabStyle = {
 }
 
 const DrawerUser = (props) => {
-    const { userActive, setUser, room, setRoom } = React.useContext(UserContext);
+    const { userActive, setUser, room, setRoom ,activeDoc ,setDoc} = React.useContext(UserContext);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
 
@@ -89,7 +101,6 @@ const DrawerUser = (props) => {
       await updateDoc(q, {
         contacts: newContacts
       })
-
       setUser({
           id: userActive.id,
           username: userActive.username,
@@ -109,10 +120,28 @@ const DrawerUser = (props) => {
     }
 
     const toggleEdit = ()=> setEditingProfile(!editingProfile);
-    function procesEditProfile(){
+    async function procesEditProfile(){
         let firstName = document.getElementById('firstName').value;
         let lastName = document.getElementById('lastName').value;
         let bio = document.getElementById('bio').value;
+
+        const q = doc(fire, 'user', userActive.id);
+        await updateDoc(q, {
+            firstname :firstName ,
+            lastname : lastName,
+            bio : bio
+        })
+        const temp = await getDoc(q)
+        console.log(temp);
+        setDoc(temp)
+        const user = temp.data();
+        user['id'] = temp.id;
+        setUser(user)
+        setRoom(await getRoom(userActive.username));
+        toggleEdit()
+        alert("Success Editing")
+
+
 
 
     }
@@ -228,7 +257,7 @@ const DrawerUser = (props) => {
             }}
         >
             <Fade in={openModalProfile}>
-                <Box sx={modalStyle}>
+                <Box sx={modalProfileStyle}>
                     <Fab size="small" color="white"  onClick={toggleEdit} aria-label="Edit" sx={{ backgroundColor: "white", boxShadow: 0 }}>
                         <ModeEditIcon />
                     </Fab>

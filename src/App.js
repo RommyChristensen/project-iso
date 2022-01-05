@@ -12,10 +12,13 @@ import { UserContext } from "./config/UserContext";
 
 function App() {
   const [userActive, setUserActive] = React.useState({});
+  const [activeDoc, setDoc] = React.useState({});
   const [rooms, setRooms] = React.useState({});
   return (
     <div className="App">
       <UserContext.Provider value={{
+        activeDoc, // aku pake doc soal e isa dapet id e ,
+        setDoc :setDoc,
         userActive,
         setUser: setUserActive,
         room:rooms,

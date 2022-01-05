@@ -18,12 +18,9 @@ import { useState,useEffect } from 'react';
 import DrawerUser from '../components/DrawerUser';
 import { UserContext } from '../config/UserContext';
 import { useNavigate } from 'react-router-dom';
+
 const drawerWidth = 350;
-
-
-
 const Layout = (props) => {
-
    // hooks
   const { userActive,setUserActive } = React.useContext(UserContext);
   const navigate = useNavigate();
@@ -33,11 +30,7 @@ const Layout = (props) => {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-<<<<<<< Updated upstream
 
-=======
- 
->>>>>>> Stashed changes
   const container = window !== undefined ? () => window().document.body : undefined;
 
   return (
