@@ -12,6 +12,9 @@ import AddIcon from '@mui/icons-material/Add';
 import Avatar from '@mui/material/Avatar';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
 import Stack from '@mui/material/Stack';
 import { useState,useEffect } from 'react';
 import Container from '@mui/material/Container';
@@ -99,18 +102,47 @@ const Layout = (props) => {
 
         </Drawer>
       </Box>
-        <Box style={{height:'700px',width:'1400px' , backgroundColor:'red'}} component="main" >
-            <Grid container style={{position:"absolute",bottom:'10px' , width:'100%',marginLeft:'10px', marginRight:'10px'}}>
-                <Grid item  sx={{ width: '95%' }}>
-                    <TextField  fullWidth id="standard-basic" label="Standard" variant="standard"  />
+      <Box style={{height:'950px',width:'90%' , backgroundColor:'lightgrey'}} component="main" >
+          <Grid item style={{width:'90%',height:'700px',marginLeft:'10px', marginRight:'10px', backgroundColor:''}}>
+            <Card style={{position:"absolute", top:"80px", float:"left"}} sx={{ minWidth: 275 }}>
+              <CardContent>
+                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                  Word of the Day
+                </Typography>
+              </CardContent>
+            </Card>
+            <Card style={{position:"absolute", top:"120px", right:10}} sx={{ minWidth: 275 }}>
+              <CardContent>
+                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                  Word of the Day
+                </Typography>
+              </CardContent>
+            </Card>
+            <Card style={{position:"absolute", top:"220px", right:10}} sx={{ minWidth: 275 }}>
+              <CardContent>
+                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                  Word of the Day
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item style={{width:"80%",position:"absolute",bottom:'10px',marginLeft:'10px', marginRight:'10px'}}>
+              {/* <Grid item style={{flex:3, width:"60%"}} > */}
+                  <TextField style={{width:"90%"}} hiddenLabel fullWidth id="standard-basic" placeholder='Enter A Message' variant="standard"  />
 
-                </Grid>
-                <Grid item  sx={{ width: '5%' }}>
-                    <h1>Hai</h1>
-                </Grid>
-            </Grid>
+              {/* </Grid> */}
+              {/* <Grid item style={{flex:1,width:"40%"}}  > */}
+              <Button style={{width:"10%"}}
+                onClick={() => {
+                  alert('clicked');
+                }}
+              >
+                SEND
+              </Button>
+              {/* </Grid> */}
+          </Grid>
 
-        </Box>
+      </Box>
     </Box>
   );
 }
