@@ -162,7 +162,7 @@ const DrawerUser = (props) => {
               { Object.keys(item).length == 0 ? <Skeleton /> : item.fname+" "+item.lname}
               </Typography>
               <Typography variant="body2" sx={{ marginLeft: 1 }}>
-              { Object.keys(item).length == 0 ? <Skeleton /> : item.chats[0].message}
+              { Object.keys(item).length == 0 ? <Skeleton /> : item.chats[item.chats.length-1].message}
               </Typography>
             </Grid>
           </ListItem>)
