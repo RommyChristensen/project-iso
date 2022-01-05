@@ -12,14 +12,14 @@ import { UserContext } from "./config/UserContext";
 
 function App() {
   const [userActive, setUserActive] = React.useState({});
-  const [room, setRoom] = React.useState({});
+  const [rooms, setRooms] = React.useState({});
   return (
     <div className="App">
       <UserContext.Provider value={{
         userActive,
         setUser: setUserActive,
-        room:room,
-        setRoom:setRoom
+        room:rooms,
+        setRoom:setRooms
       }}>
         
         <Router>

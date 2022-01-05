@@ -18,12 +18,6 @@ import { UserContext } from '../config/UserContext';
 import { useNavigate } from 'react-router-dom';
 const drawerWidth = 350;
 
-const fabStyle = {
-    position: 'absolute',
-    right: 16,
-    bottom: 16,
-    backgroundColor: "#FF7878"
-}
 
 
 const Layout = (props) => {
@@ -103,9 +97,7 @@ const Layout = (props) => {
           open
         >
           <DrawerUser></DrawerUser>
-            <Fab size="medium" color="secondary" aria-label="add" sx={fabStyle}>
-                <AddIcon />
-            </Fab>
+            
         </Drawer>
       </Box>
       <Box component="main">

@@ -7,12 +7,12 @@ import { fire } from '../config/firebase';
     const room = [];
     const q = query(collection(fire, 'room'),orderBy('chats.sent_time','desc'));
     const data =  await getDocs(q);
-    data.forEach(async function  (doc) {
+    await data.forEach(async function  (doc) {
         // doc.data() is never undefined for query doc snapshots
         if(doc.data().user1==user || doc.data().user2==user){
            room.push(doc.data());
         }
-        room.forEach(async function (item) {
+        (await room).forEach(async function (item) {
             var user_id;
             // doc.data() is never undefined for query doc snapshots
             if(item.user1==user){
@@ -22,13 +22,14 @@ import { fire } from '../config/firebase';
               user_id = item.user1;
             }
             const data_user = await getDocs(query(collection(fire, 'user'),where('username','==',user_id)));
-            data_user.forEach(function(item2) {
-              item.firstname=item2.data().firstname;
-              item.lastname=item2.data().lastname;
+            (await data_user).forEach(function(item2) {
+              console.log(item2.data());
+              item["fname"]=item2.data().firstname;
+              item["lname"]=item2.data().lastname;
             });
         });
     });
-     
+    
     return room;
   }
   export default getRoom;

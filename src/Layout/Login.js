@@ -82,7 +82,10 @@ const Login = ()=>{
         if(valid !== false){
             setUser(valid);
             setRoom(await getRoom(username));
-            navigate('/home');
+            setTimeout(() => {
+                navigate('/home'); 
+            }, 1500);
+           
             
         }else{
             alert("Username atau password tidak ditemukan")

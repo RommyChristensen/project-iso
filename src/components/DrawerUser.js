@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
+import AddIcon from '@mui/icons-material/Add';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Toolbar from '@mui/material/Toolbar';
@@ -40,6 +41,12 @@ const modalStyle = {
   height: 600,
   overflow: 'scroll'
 };
+const fabStyle = {
+  position: 'absolute',
+  right: 16,
+  bottom: 16,
+  backgroundColor: "#FF7878"
+}
 
 const DrawerUser = (props) => {
     const { userActive, setUser, room, setRoom } = React.useContext(UserContext);
@@ -50,6 +57,7 @@ const DrawerUser = (props) => {
     const [openModal, setOpenModal] = React.useState(false);
     const [editingProfile, setEditingProfile] = React.useState(false);
     const [openModalProfile, setOpenModalProfile] = React.useState(false);
+    const [openModalNewRoom, setOpenModalNewRoom] = React.useState(false);
 
     const handleChange = (event, newValue) => {
       setValue(newValue);
@@ -59,6 +67,8 @@ const DrawerUser = (props) => {
     const handleModalClose = () => setOpenModal(false);
     const handleOpenModalProfile= () => setOpenModalProfile(true);
     const handleCloseModalProfile= () => setOpenModalProfile(false);
+    const handleOpenModalNewRoom= () => setOpenModalProfile(true);
+    const handleCloseModalNewRoom= () => setOpenModalNewRoom(false);
 
     const handleMenuClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -106,14 +116,36 @@ const DrawerUser = (props) => {
 
 
     }
-    console.log(room);
+    
+    const listRoom = ()=>{
+      var list = [];
+        room.forEach(item => {
+          console.log(item);
+          console.log("fname : ",item.fname);
+          list.push(
+          <ListItem button key="test">
+            <ListItemIcon>
+              { Object.keys(item).length == 0 ? <Skeleton variant="circular" /> : <Avatar sx={{ bgcolor: "#FF7878" }}>{item.fname[0]+item.lname[0]}</Avatar>}
+            </ListItemIcon>
+            <Grid container direction="column">
+              <Typography variant="subtitle2" sx={{ marginLeft: 1, textStyle: "bold" }}>
+              { Object.keys(item).length == 0 ? <Skeleton /> : item.fname+" "+item.lname}
+              </Typography>
+              <Typography variant="body2" sx={{ marginLeft: 1 }}>
+              { Object.keys(item).length == 0 ? <Skeleton /> : item.chats.message}
+              </Typography>
+            </Grid>
+          </ListItem>)
+        });
+        return list;
+    };
     //navbar
     return (
     <div>
       <Toolbar>
          <Grid container>
             <Grid item xs={2}>
-                <Avatar sx={{ bgcolor: "#FF7878" }}>{getAvatar()}</Avatar>
+                <Avatar sx={{ bgcolor: "#FF7878" }}>{ Object.keys(userActive).length == 0 ? <Skeleton /> : getAvatar()}</Avatar>
             </Grid>
             <Grid item xs={9}>
               <Typography variant="subtitle2" sx={{ marginLeft: 1, textStyle: "bold" }}>
@@ -149,25 +181,12 @@ const DrawerUser = (props) => {
       <Divider />
       <List>
        {
-         room.map((item,i)=>(
-          <ListItem button key="test">
-            <ListItemIcon>
-              <Avatar sx={{ bgcolor: "#FF7878" }}>{item.firstname.substr(0,1)+item.lastname.substr(0,1)}</Avatar>
-            </ListItemIcon>
-            <Grid container direction="column">
-              <Typography variant="subtitle2" sx={{ marginLeft: 1, textStyle: "bold" }}>
-                {item.firstname+" "+item.lastname}
-              </Typography>
-              <Typography variant="body2" sx={{ marginLeft: 1 }}>
-                {item.chats.message}
-              </Typography>
-            </Grid>
-          </ListItem>
-         )
-        )
+         listRoom()
        }
       </List>
-
+      <Fab size="medium" color="secondary" aria-label="add" sx={fabStyle}>
+          <AddIcon onClick={handleOpenModalNewRoom} />
+      </Fab>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -214,7 +233,38 @@ const DrawerUser = (props) => {
                         <ModeEditIcon />
                     </Fab>
                     <Box sx={{display:'flex' , alignItems:'center', justifyContent: 'space-between'}}>
-                        <Avatar  sx={{ bgcolor: "#FF7878" }}>{getAvatar()}</Avatar>
+                        <Avatar  sx={{ bgcolor: "#FF7878" }}>{ Object.keys(userActive).length == 0 ? <Skeleton /> : getAvatar()}</Avatar>
+                        <TextField disabled={!editingProfile}  id='firstName' label="First Name" variant="outlined"  defaultValue={userActive.firstname}style={{marginLeft:'20px'}} />
+                        <TextField disabled={!editingProfile}  id="lastName" label="Last Name" variant="outlined" defaultValue={userActive.lastname} />
+                    </Box>
+                    <Box marginY={'10px'}>
+                        <TextField disabled={!editingProfile}  fullWidth id="bio" label="Bio" variant="outlined" defaultValue={userActive.bio} />
+                    </Box>
+                    {editingProfile && <Button fullWidth onClick={()=>procesEditProfile()} variant="contained">Edit</Button> }
+
+                </Box>
+
+            </Fade>
+        </Modal>
+        
+        <Modal
+            aria-labelledby="transition-modal-title"
+            aria-describedby="transition-modal-description"
+            open={openModalNewRoom}
+            onClose={handleCloseModalNewRoom}
+            closeAfterTransition
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+                timeout: 500,
+            }}
+        >
+            <Fade in={openModalNewRoom}>
+                <Box sx={modalStyle}>
+                    <Fab size="small" color="white"  onClick={toggleEdit} aria-label="Edit" sx={{ backgroundColor: "white", boxShadow: 0 }}>
+                        <ModeEditIcon />
+                    </Fab>
+                    <Box sx={{display:'flex' , alignItems:'center', justifyContent: 'space-between'}}>
+                        <Avatar  sx={{ bgcolor: "#FF7878" }}>{ Object.keys(userActive).length == 0 ? <Skeleton /> : getAvatar()}</Avatar>
                         <TextField disabled={!editingProfile}  id='firstName' label="First Name" variant="outlined"  defaultValue={userActive.firstname}style={{marginLeft:'20px'}} />
                         <TextField disabled={!editingProfile}  id="lastName" label="Last Name" variant="outlined" defaultValue={userActive.lastname} />
                     </Box>
