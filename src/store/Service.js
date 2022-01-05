@@ -36,7 +36,7 @@ import { fire } from '../config/firebase';
   function sorting(data) {
     for (let i = 0; i < data.length-1; i++) {
       for (let j = i+1; j < data.length; j++) {
-        if(data[i].chats[data.chats-1].sent_time>=data[j].chats[data.chats-1].sent_time){
+        if(data[i].chats[data[i].chats.length-1].sent_time<=data[j].chats[data[j].chats.length-1].sent_time){
           var dt = data[i];
           data[i] = data[j];
           data[j] = dt;

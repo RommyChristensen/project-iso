@@ -176,30 +176,42 @@ const DrawerUser = (props) => {
       console.log(userActive.contacts);
       var list = [];
         userActive.contacts.forEach((item,index) => {
+          console.log(cekRoom(item));
+         if(cekRoom(item)==0){
+            list.push(
+              <ListItem>
+                  <ListItemIcon>
+                    <Avatar sx={{ bgcolor: "#FF7878" }}>{item.username.substring(0,2).toUpperCase()}</Avatar>
+                  </ListItemIcon>
+                  <Grid container>
+                      <Grid item xs={10}>
+                        <Typography variant="subtitle1" sx={{ marginLeft: 0.1, textStyle: "bold" }}>
+                            {item.username}
+                        </Typography>
+                        <Typography variant="subtitle2" sx={{ marginLeft: 0.1, textStyle: "bold" }}>
+                            {item.bio}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={2}>
+                        <FormControlLabel value="1" control={<Radio />} onClick={() =>chooseContact(item)} label="" />
+                      </Grid>
+                  </Grid>
+              </ListItem>
+            )
+         }
          
-          list.push(
-            <ListItem>
-                <ListItemIcon>
-                  <Avatar sx={{ bgcolor: "#FF7878" }}>{item.username.substring(0,2).toUpperCase()}</Avatar>
-                </ListItemIcon>
-                <Grid container>
-                    <Grid item xs={10}>
-                      <Typography variant="subtitle1" sx={{ marginLeft: 0.1, textStyle: "bold" }}>
-                          {item.username}
-                      </Typography>
-                      <Typography variant="subtitle2" sx={{ marginLeft: 0.1, textStyle: "bold" }}>
-                          {item.bio}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={2}>
-                      <FormControlLabel value="1" control={<Radio />} onClick={() =>chooseContact(item)} label="" />
-                    </Grid>
-                </Grid>
-            </ListItem>
-          )
          
         }); 
         return list;
+    }
+    function cekRoom(data) {
+      var ada = 0;
+      room.forEach(items => {
+        if(data.username==items.user1||data.username==items.user2){
+          ada=1;
+        }
+      });
+      return ada;
     }
     async function  handleSubmit(event){
       event.preventDefault();
