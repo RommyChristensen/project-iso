@@ -65,18 +65,21 @@ const Login = ()=>{
         // eslint-disable-next-line no-console
         let username = data.get('username')
         let password = data.get('password')
-        let valid = await ceklogin(username,password)
+        let valid = await ceklogin(username,password);
+        let rooms = await getRoom(username);
         if(valid !== false){
             let user = valid.data()
             user['id'] = valid.id
             setUser(user);
             setDoc(valid)
             console.log(valid)
-            setRoom(await getRoom(username));
+            setRoom(rooms);
+            console.log(rooms);
+   
             setTimeout(() => {
                 navigate('/home');
             }, 1500);
-
+     
 
         }else{
             alert("Username atau password tidak ditemukan")

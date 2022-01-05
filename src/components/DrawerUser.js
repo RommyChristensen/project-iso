@@ -25,11 +25,12 @@ import { UserContext } from '../config/UserContext';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import TextField from '@mui/material/TextField';
 import { render } from '@testing-library/react';
-import {updateDoc, doc, getDoc} from 'firebase/firestore/lite';
+import {updateDoc, doc, getDoc, collection, addDoc} from 'firebase/firestore/lite';
 import { fire } from '../config/firebase';
 import Button from '@mui/material/Button';
 import getRoom from "../store/Service";
-
+import { FormControlLabel, Radio, RadioGroup } from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
 const modalStyle = {
   position: 'absolute',
   top: '50%',
@@ -70,6 +71,7 @@ const DrawerUser = (props) => {
     const [editingProfile, setEditingProfile] = React.useState(false);
     const [openModalProfile, setOpenModalProfile] = React.useState(false);
     const [openModalNewRoom, setOpenModalNewRoom] = React.useState(false);
+    const [selectContact, setSelectContact] = React.useState({});
 
     const handleChange = (event, newValue) => {
       setValue(newValue);
@@ -79,7 +81,7 @@ const DrawerUser = (props) => {
     const handleModalClose = () => setOpenModal(false);
     const handleOpenModalProfile= () => setOpenModalProfile(true);
     const handleCloseModalProfile= () => setOpenModalProfile(false);
-    const handleOpenModalNewRoom= () => setOpenModalProfile(true);
+    const handleOpenModalNewRoom= () => setOpenModalNewRoom(true);
     const handleCloseModalNewRoom= () => setOpenModalNewRoom(false);
 
     const handleMenuClick = (event) => {
@@ -148,26 +150,78 @@ const DrawerUser = (props) => {
     
     const listRoom = ()=>{
       var list = [];
+      console.log(room);
         room.forEach(item => {
-          console.log(item);
-          console.log("fname : ",item.fname);
           list.push(
           <ListItem button key="test">
             <ListItemIcon>
-              { Object.keys(item).length == 0 ? <Skeleton variant="circular" /> : <Avatar sx={{ bgcolor: "#FF7878" }}>{item.fname[0]+item.lname[0]}</Avatar>}
+              { Object.keys(item).length == 0 ? <Skeleton variant="circular" /> : <Avatar sx={{ bgcolor: "#FF7878" }}>{item.fname[0].toUpperCase()+item.lname[0].toUpperCase()}</Avatar>}
             </ListItemIcon>
             <Grid container direction="column">
               <Typography variant="subtitle2" sx={{ marginLeft: 1, textStyle: "bold" }}>
               { Object.keys(item).length == 0 ? <Skeleton /> : item.fname+" "+item.lname}
               </Typography>
               <Typography variant="body2" sx={{ marginLeft: 1 }}>
-              { Object.keys(item).length == 0 ? <Skeleton /> : item.chats.message}
+              { Object.keys(item).length == 0 ? <Skeleton /> : item.chats[0].message}
               </Typography>
             </Grid>
           </ListItem>)
         });
         return list;
     };
+    function chooseContact(item) {
+         setSelectContact(item);
+    }
+    const listContact = ()=>{
+      console.log(userActive.contacts);
+      var list = [];
+        userActive.contacts.forEach((item,index) => {
+         
+          list.push(
+            <ListItem>
+                <ListItemIcon>
+                  <Avatar sx={{ bgcolor: "#FF7878" }}>{item.username.substring(0,2).toUpperCase()}</Avatar>
+                </ListItemIcon>
+                <Grid container>
+                    <Grid item xs={10}>
+                      <Typography variant="subtitle1" sx={{ marginLeft: 0.1, textStyle: "bold" }}>
+                          {item.username}
+                      </Typography>
+                      <Typography variant="subtitle2" sx={{ marginLeft: 0.1, textStyle: "bold" }}>
+                          {item.bio}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={2}>
+                      <FormControlLabel value="1" control={<Radio />} onClick={() =>chooseContact(item)} label="" />
+                    </Grid>
+                </Grid>
+            </ListItem>
+          )
+         
+        }); 
+        return list;
+    }
+    async function  handleSubmit(event){
+      event.preventDefault();
+      const data = new FormData(event.currentTarget);
+      // eslint-disable-next-line no-console
+      let chats = data.get('message');
+      let newRoom = {
+        "user1":userActive.username,
+        "user2":selectContact.username,
+        "chats":[
+          {
+            "from":userActive.username,
+            "message":chats,
+            "read":false,
+            "sent_time":new Date().toLocaleString()
+          }
+        ]
+      }
+      const db = collection(fire, 'room');
+      const res = await addDoc(db, newRoom);
+      handleCloseModalNewRoom();
+  };
     //navbar
     return (
     <div>
@@ -258,19 +312,7 @@ const DrawerUser = (props) => {
         >
             <Fade in={openModalProfile}>
                 <Box sx={modalProfileStyle}>
-                    <Fab size="small" color="white"  onClick={toggleEdit} aria-label="Edit" sx={{ backgroundColor: "white", boxShadow: 0 }}>
-                        <ModeEditIcon />
-                    </Fab>
-                    <Box sx={{display:'flex' , alignItems:'center', justifyContent: 'space-between'}}>
-                        <Avatar  sx={{ bgcolor: "#FF7878" }}>{ Object.keys(userActive).length == 0 ? <Skeleton /> : getAvatar()}</Avatar>
-                        <TextField disabled={!editingProfile}  id='firstName' label="First Name" variant="outlined"  defaultValue={userActive.firstname}style={{marginLeft:'20px'}} />
-                        <TextField disabled={!editingProfile}  id="lastName" label="Last Name" variant="outlined" defaultValue={userActive.lastname} />
-                    </Box>
-                    <Box marginY={'10px'}>
-                        <TextField disabled={!editingProfile}  fullWidth id="bio" label="Bio" variant="outlined" defaultValue={userActive.bio} />
-                    </Box>
-                    {editingProfile && <Button fullWidth onClick={()=>procesEditProfile()} variant="contained">Edit</Button> }
-
+                 
                 </Box>
 
             </Fade>
@@ -288,22 +330,24 @@ const DrawerUser = (props) => {
             }}
         >
             <Fade in={openModalNewRoom}>
-                <Box sx={modalStyle}>
-                    <Fab size="small" color="white"  onClick={toggleEdit} aria-label="Edit" sx={{ backgroundColor: "white", boxShadow: 0 }}>
-                        <ModeEditIcon />
-                    </Fab>
-                    <Box sx={{display:'flex' , alignItems:'center', justifyContent: 'space-between'}}>
-                        <Avatar  sx={{ bgcolor: "#FF7878" }}>{ Object.keys(userActive).length == 0 ? <Skeleton /> : getAvatar()}</Avatar>
-                        <TextField disabled={!editingProfile}  id='firstName' label="First Name" variant="outlined"  defaultValue={userActive.firstname}style={{marginLeft:'20px'}} />
-                        <TextField disabled={!editingProfile}  id="lastName" label="Last Name" variant="outlined" defaultValue={userActive.lastname} />
-                    </Box>
-                    <Box marginY={'10px'}>
-                        <TextField disabled={!editingProfile}  fullWidth id="bio" label="Bio" variant="outlined" defaultValue={userActive.bio} />
-                    </Box>
-                    {editingProfile && <Button fullWidth onClick={()=>procesEditProfile()} variant="contained">Edit</Button> }
-
-                </Box>
-
+                <Box sx={modalProfileStyle} component="form" onSubmit={handleSubmit}>
+                <Grid container style={{marginBottom:"20px"}}>
+                    <Grid item xs={10}>
+                      <TextField required defaultValue="Hai!" name="message" id="outlined-basic" label="Message" variant="outlined" autoFocus style={{width:"100%"}} />
+                    </Grid>
+                    <Grid item xs={2} style={{paddingLeft:"5px",paddingRight:"5px"}} >
+                      <Button type='submit' variant="outlined" style={{width:"100%",height:"50px"}}><SendIcon></SendIcon></Button>
+                    </Grid>
+                </Grid>
+                <Typography variant="h6" component="h6" style={{marginBottom:"10px"}}>
+                  Choose Friend
+                </Typography>
+                <RadioGroup
+                    name="radio-buttons-group"
+                  >
+                  {listContact()}
+                  </RadioGroup>
+                 </Box>
             </Fade>
         </Modal>
     </div>
