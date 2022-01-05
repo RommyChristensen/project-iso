@@ -32,6 +32,7 @@ const Login = ()=>{
         data.forEach(function async (doc) {
             // doc.data() is never undefined for query doc snapshots
             var user = doc.data();
+            user['id'] = doc.id;
             listUser.push({
                 user : user
             });

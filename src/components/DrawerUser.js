@@ -22,6 +22,8 @@ import SearchUser from './SearchUser';
 import Skeleton from '@mui/material/Skeleton';
 import { UserContext } from '../config/UserContext';
 import { render } from '@testing-library/react';
+import { updateDoc, doc } from 'firebase/firestore/lite';
+import { fire } from '../config/firebase';
 
 const modalStyle = {
   position: 'absolute',
@@ -32,10 +34,12 @@ const modalStyle = {
   bgcolor: 'background.paper',
   boxShadow: 24,
   p: 2,
+  height: 600,
+  overflow: 'scroll'
 };
 
 const DrawerUser = (props) => {
-    const { userActive,room,setRoom } = React.useContext(UserContext);
+    const { userActive, setUser, room, setRoom } = React.useContext(UserContext);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
 
@@ -43,7 +47,6 @@ const DrawerUser = (props) => {
     const [openModal, setOpenModal] = React.useState(false);
 
     const handleChange = (event, newValue) => {
-      console.log(newValue);
       setValue(newValue);
     };
 
@@ -56,7 +59,31 @@ const DrawerUser = (props) => {
     const handleMenuClose = () => {
         setAnchorEl(null);
     };
-    console.log(room);
+
+    const deleteContact = async (id) => {
+      const newContacts = [];
+      userActive.contacts.forEach(e => {
+        if(e.id !== id){
+          newContacts.push(e);
+        }
+      })
+
+      const q = doc(fire, 'user', userActive.id);
+      await updateDoc(q, {
+        contacts: newContacts
+      })
+
+      setUser({
+          id: userActive.id,
+          username: userActive.username,
+          firstname: userActive.firstname,
+          lastname: userActive.lastname,
+          password: userActive.password,
+          bio: userActive.bio,
+          contacts: newContacts
+      })
+    }
+
     //navbar
     return (
     <div>
@@ -140,7 +167,7 @@ const DrawerUser = (props) => {
               <Tab label="My Contacts" />
               <Tab label="Search User" />
             </Tabs>
-            {(value == 0) && <ListContacts />}
+            {(value == 0) && <ListContacts deleteContact={deleteContact} />}
             {(value == 1) && <SearchUser />}
           </Box>
         </Fade>

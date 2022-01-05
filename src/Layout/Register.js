@@ -14,7 +14,7 @@ import { CircularProgress } from '@mui/material';
 import Toastify from 'toastify-js';
 
 // firebase
-import { query, collection, where, onSnapshot, getDocs, addDoc, orWhere } from 'firebase/firestore/lite';
+import { query, collection, where, onSnapshot, getDocs, addDoc, orWhere, updateDoc, doc } from 'firebase/firestore/lite';
 import { fire } from '../config/firebase';
 
 // style
@@ -45,6 +45,23 @@ export default function SignUp() {
     const [submitForm, setSubmitForm] = React.useState(false);
 
     const checkUsername = async (username) => {
+        // const db = collection(fire, 'user');
+        // const q2 = query(db, where('username', '==', 'dave'));
+        // const userA = await getDocs(q2);
+        // const id = userA.docs[0].id;
+
+        // const q3 = doc(fire, 'user', id);
+        // await updateDoc(q3, {
+        //     test: "test"
+        // })
+
+        // // await updateDoc(q2, {
+        // //     test: "test"
+        // // })
+
+        // console.log(userA.docs[0].id);
+        // return;
+
         const q = query(collection(fire, 'user'), where('username', '==', username));
         const data = await getDocs(q);
 

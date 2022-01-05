@@ -29,7 +29,7 @@ const fabStyle = {
 const Layout = (props) => {
 
    // hooks
-  const {userActive,setUserActive} = React.useContext(UserContext);
+  const { userActive,setUserActive } = React.useContext(UserContext);
   const navigate = useNavigate();
   const { window } = props;
   const [ mobileOpen, setMobileOpen ] = React.useState(false);
@@ -102,7 +102,7 @@ const Layout = (props) => {
           }}
           open
         >
-          <DrawerUser ></DrawerUser>
+          <DrawerUser></DrawerUser>
             <Fab size="medium" color="secondary" aria-label="add" sx={fabStyle}>
                 <AddIcon />
             </Fab>
