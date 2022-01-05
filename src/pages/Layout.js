@@ -33,15 +33,15 @@ const Layout = (props) => {
   const navigate = useNavigate();
   const { window } = props;
   const [ mobileOpen, setMobileOpen ] = React.useState(false);
-  
+
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
- 
+
   const container = window !== undefined ? () => window().document.body : undefined;
 
   return (
-    
+
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <AppBar

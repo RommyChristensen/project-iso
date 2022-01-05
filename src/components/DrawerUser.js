@@ -21,16 +21,19 @@ import ListContacts from './ListContacts';
 import SearchUser from './SearchUser';
 import Skeleton from '@mui/material/Skeleton';
 import { UserContext } from '../config/UserContext';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import TextField from '@mui/material/TextField';
 import { render } from '@testing-library/react';
 import { updateDoc, doc } from 'firebase/firestore/lite';
 import { fire } from '../config/firebase';
+import Button from '@mui/material/Button';
 
 const modalStyle = {
   position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
+  width: 600,
   bgcolor: 'background.paper',
   boxShadow: 24,
   p: 2,
@@ -45,6 +48,8 @@ const DrawerUser = (props) => {
 
     const [value, setValue] = React.useState(0);
     const [openModal, setOpenModal] = React.useState(false);
+    const [editingProfile, setEditingProfile] = React.useState(false);
+    const [openModalProfile, setOpenModalProfile] = React.useState(false);
 
     const handleChange = (event, newValue) => {
       setValue(newValue);
@@ -52,6 +57,8 @@ const DrawerUser = (props) => {
 
     const handleModalOpen = () => setOpenModal(true);
     const handleModalClose = () => setOpenModal(false);
+    const handleOpenModalProfile= () => setOpenModalProfile(true);
+    const handleCloseModalProfile= () => setOpenModalProfile(false);
 
     const handleMenuClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -84,17 +91,33 @@ const DrawerUser = (props) => {
       })
     }
 
+    const logoutHandler = ()=>{
+        window.location = '/login'
+    }
+    const getAvatar = ()=>{
+        return (userActive.firstname[0]).toUpperCase() + (userActive.lastname[0]).toUpperCase()
+    }
+
+    const toggleEdit = ()=> setEditingProfile(!editingProfile);
+    function procesEditProfile(){
+        let firstName = document.getElementById('firstName').value;
+        let lastName = document.getElementById('lastName').value;
+        let bio = document.getElementById('bio').value;
+
+
+    }
+    console.log(room);
     //navbar
     return (
     <div>
       <Toolbar>
-        <Grid container>
+         <Grid container>
             <Grid item xs={2}>
-                <Avatar sx={{ bgcolor: "#FF7878" }}>{userActive.firstname.substr(0,1)+userActive.lastname.substr(0,1)}</Avatar>
+                <Avatar sx={{ bgcolor: "#FF7878" }}>{getAvatar()}</Avatar>
             </Grid>
             <Grid item xs={9}>
               <Typography variant="subtitle2" sx={{ marginLeft: 1, textStyle: "bold" }}>
-                { Object.keys(userActive).length == 0 ? <Skeleton /> : userActive.username}
+                { Object.keys(userActive).length == 0 ? <Skeleton /> : userActive.firstname +' '+userActive.lastname}
               </Typography>
               <Typography variant="body2" sx={{ marginLeft: 1 }}>
                 { Object.keys(userActive).length == 0 ? <Skeleton /> : userActive.bio}
@@ -114,18 +137,19 @@ const DrawerUser = (props) => {
                   }}
                 >
                   <MenuItem onClick={handleModalOpen}>Contacts</MenuItem>
-                  <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-                  <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+                  <MenuItem onClick={handleOpenModalProfile}>Profile</MenuItem>
+                  <MenuItem onClick={()=>logoutHandler()}>Logout</MenuItem>
                 </Menu>
+
+
+
             </Grid>
         </Grid>
       </Toolbar>
       <Divider />
       <List>
        {
-         
          room.map((item,i)=>(
-        
           <ListItem button key="test">
             <ListItemIcon>
               <Avatar sx={{ bgcolor: "#FF7878" }}>{item.firstname.substr(0,1)+item.lastname.substr(0,1)}</Avatar>
@@ -172,6 +196,37 @@ const DrawerUser = (props) => {
           </Box>
         </Fade>
       </Modal>
+
+        <Modal
+            aria-labelledby="transition-modal-title"
+            aria-describedby="transition-modal-description"
+            open={openModalProfile}
+            onClose={handleCloseModalProfile}
+            closeAfterTransition
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+                timeout: 500,
+            }}
+        >
+            <Fade in={openModalProfile}>
+                <Box sx={modalStyle}>
+                    <Fab size="small" color="white"  onClick={toggleEdit} aria-label="Edit" sx={{ backgroundColor: "white", boxShadow: 0 }}>
+                        <ModeEditIcon />
+                    </Fab>
+                    <Box sx={{display:'flex' , alignItems:'center', justifyContent: 'space-between'}}>
+                        <Avatar  sx={{ bgcolor: "#FF7878" }}>{getAvatar()}</Avatar>
+                        <TextField disabled={!editingProfile}  id='firstName' label="First Name" variant="outlined"  defaultValue={userActive.firstname}style={{marginLeft:'20px'}} />
+                        <TextField disabled={!editingProfile}  id="lastName" label="Last Name" variant="outlined" defaultValue={userActive.lastname} />
+                    </Box>
+                    <Box marginY={'10px'}>
+                        <TextField disabled={!editingProfile}  fullWidth id="bio" label="Bio" variant="outlined" defaultValue={userActive.bio} />
+                    </Box>
+                    {editingProfile && <Button fullWidth onClick={()=>procesEditProfile()} variant="contained">Edit</Button> }
+
+                </Box>
+
+            </Fade>
+        </Modal>
     </div>
     )
   };
