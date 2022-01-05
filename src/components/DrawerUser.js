@@ -165,7 +165,8 @@ const DrawerUser = (props) => {
               { Object.keys(item).length == 0 ? <Skeleton /> : item.chats[item.chats.length-1].message}
               </Typography>
             </Grid>
-          </ListItem>)
+          </ListItem>
+          )
         });
         return list;
     };
