@@ -11,6 +11,8 @@ import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import Avatar from '@mui/material/Avatar';
 import Grid from '@mui/material/Grid';
+import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
 import { useState,useEffect } from 'react';
 
 import DrawerUser from '../components/DrawerUser';
@@ -31,7 +33,11 @@ const Layout = (props) => {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+<<<<<<< Updated upstream
 
+=======
+ 
+>>>>>>> Stashed changes
   const container = window !== undefined ? () => window().document.body : undefined;
 
   return (
@@ -100,8 +106,9 @@ const Layout = (props) => {
             
         </Drawer>
       </Box>
-      <Box component="main">
+      <Box component="main" >
         Test
+        <TextField fullWidth label="fullWidth" id="fullWidth" />
       </Box>
     </Box>
   );
