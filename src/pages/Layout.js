@@ -102,7 +102,7 @@ const Layout = (props) => {
 
         </Drawer>
       </Box>
-      <Box style={{height:'950px',width:'90%' , backgroundColor:'lightgrey'}} component="main" >
+      <Box style={{height:'auto',width:'90%' , backgroundColor:'lightgrey'}} component="main" >
           <Grid item style={{width:'90%',height:'700px',marginLeft:'10px', marginRight:'10px', backgroundColor:''}}>
             <Card style={{position:"absolute", top:"80px", float:"left"}} sx={{ minWidth: 275 }}>
               <CardContent>
