@@ -14,7 +14,7 @@ import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import { useState,useEffect } from 'react';
-
+import Container from '@mui/material/Container';
 import DrawerUser from '../components/DrawerUser';
 import { UserContext } from '../config/UserContext';
 import { useNavigate } from 'react-router-dom';
@@ -96,13 +96,21 @@ const Layout = (props) => {
           open
         >
           <DrawerUser></DrawerUser>
-            
+
         </Drawer>
       </Box>
-      <Box component="main" >
-        Test
-        <TextField fullWidth label="fullWidth" id="fullWidth" />
-      </Box>
+        <Box style={{height:'700px',width:'1400px' , backgroundColor:'red'}} component="main" >
+            <Grid container style={{position:"absolute",bottom:'10px' , width:'100%',marginLeft:'10px', marginRight:'10px'}}>
+                <Grid item  sx={{ width: '95%' }}>
+                    <TextField  fullWidth id="standard-basic" label="Standard" variant="standard"  />
+
+                </Grid>
+                <Grid item  sx={{ width: '5%' }}>
+                    <h1>Hai</h1>
+                </Grid>
+            </Grid>
+
+        </Box>
     </Box>
   );
 }
