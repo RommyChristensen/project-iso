@@ -252,6 +252,7 @@ const DrawerUser = (props) => {
       room.push(newRoom);
       SortingData(room);
       setRoom(room);
+
       const db = collection(fire, 'room');
       const res = await addDoc(db, newRoom);
       handleCloseModalNewRoom();
@@ -346,7 +347,18 @@ const DrawerUser = (props) => {
         >
             <Fade in={openModalProfile}>
                 <Box sx={modalProfileStyle}>
-                 
+                  <Fab size="small" color="white"  onClick={toggleEdit} aria-label="Edit" sx={{ backgroundColor: "white", boxShadow: 0 }}>
+                        <ModeEditIcon />
+                    </Fab>
+                    <Box sx={{display:'flex' , alignItems:'center', justifyContent: 'space-between'}}>
+                        <Avatar  sx={{ bgcolor: "#FF7878" }}>{ Object.keys(userActive).length == 0 ? <Skeleton /> : getAvatar()}</Avatar>
+                        <TextField disabled={!editingProfile}  id='firstName' label="First Name" variant="outlined"  defaultValue={userActive.firstname}style={{marginLeft:'20px'}} />
+                        <TextField disabled={!editingProfile}  id="lastName" label="Last Name" variant="outlined" defaultValue={userActive.lastname} />
+                    </Box>
+                    <Box marginY={'10px'}>
+                        <TextField disabled={!editingProfile}  fullWidth id="bio" label="Bio" variant="outlined" defaultValue={userActive.bio} />
+                    </Box>
+                    {editingProfile && <Button fullWidth onClick={()=>procesEditProfile()} variant="contained">Edit</Button> }
                 </Box>
 
             </Fade>
