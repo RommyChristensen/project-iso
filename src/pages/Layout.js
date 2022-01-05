@@ -128,7 +128,7 @@ const Layout = (props) => {
           </Grid>
           <Grid item style={{width:"80%",position:"absolute",bottom:'10px',marginLeft:'10px', marginRight:'10px'}}>
               {/* <Grid item style={{flex:3, width:"60%"}} > */}
-                  <TextField style={{width:"90%"}} hiddenLabel fullWidth id="standard-basic" placeholder='Enter A Message' variant="standard"  />
+                  <TextField style={{width:"90%",backgroundColor:"white"}} hiddenLabel fullWidth id="standard-basic" placeholder='Enter A Message' variant="standard"  />
 
               {/* </Grid> */}
               {/* <Grid item style={{flex:1,width:"40%"}}  > */}
