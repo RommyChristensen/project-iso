@@ -26,7 +26,7 @@ import UserChat from '../components/UserChat';
 const drawerWidth = 350;
 const Layout = (props) => {
    // hooks
-  const { userActive,setUserActive } = React.useContext(UserContext);
+  const { userActive,setUserActive,activeRoom } = React.useContext(UserContext);
   const navigate = useNavigate();
   const { window } = props;
   const [ mobileOpen, setMobileOpen ] = React.useState(false);
@@ -52,11 +52,12 @@ const Layout = (props) => {
         <Toolbar>
             <Grid container>
                 <Grid item sx={{ width: '4%' }}>
-                    <Avatar sx={{ bgcolor: "#FFFFFF", color: "black" }}>DS</Avatar>
+                    <Avatar sx={{ bgcolor: "#FFFFFF", color: "black" }}>{"DS"}</Avatar>
+                    {/* activeRoom!=null ? activeRoom.fname[0]+activeRoom.lname[0] :"DS" */}
                 </Grid>
                 <Grid item sx={{ width: '86%' }}>
                     <Typography variant="subtitle2" sx={{ marginLeft: 1, textStyle: "bold" }}>
-                        Denny Susastro
+                        {activeRoom.fname + " "+ activeRoom.lname}
                     </Typography>
                     <Typography variant="body2" sx={{ marginLeft: 1 }}>
                         Hey there i'm using chat in
@@ -103,7 +104,7 @@ const Layout = (props) => {
 
         </Drawer>
       </Box>
-      <Box style={{height:'auto',width:'90%' , backgroundColor:'lightgrey'}} component="main" >
+      <Box style={{height:'auto',width:'90%',paddingTop:"100px" , backgroundColor:'lightgrey'}} component="main" >
           <UserChat />
       </Box>
     </Box>
