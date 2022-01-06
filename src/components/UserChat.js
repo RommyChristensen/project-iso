@@ -55,6 +55,8 @@ const UserChat = () => {
         await updateDoc(docChat, {
             chats: arrayUnion(newChat)
         });
+
+        document.getElementById("message").value("");
         
     };
     const generateMessages = () => {
@@ -113,7 +115,7 @@ const UserChat = () => {
             </Grid>
             <Grid item component="form" onSubmit={sendChat} style={{width:"70%",position:"absolute",bottom:'10px',marginLeft:'10px', marginRight:'10px'}}>
                 {/* <Grid item style={{flex:3, width:"60%"}} > */}
-                    <TextField name="message" onChange={(e) => setText(e.target.value)} style={{width:"90%",backgroundColor:"white"}} hiddenLabel fullWidth id="standard-basic" placeholder='Enter A Message' variant="standard"  />
+                    <TextField id="message" name="message" onChange={(e) => setText(e.target.value)} style={{width:"90%",backgroundColor:"white"}} hiddenLabel fullWidth id="standard-basic" placeholder='Enter A Message' variant="standard"  />
 
                 {/* </Grid> */}
                 {/* <Grid item style={{flex:1,width:"40%"}}  > */}
