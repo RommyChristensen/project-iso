@@ -14,6 +14,8 @@ function App() {
   const [userActive, setUserActive] = React.useState({});
   const [activeDoc, setDoc] = React.useState({});
   const [rooms, setRooms] = React.useState({});
+  const [activeRoom, setActiveRoom] = React.useState({});
+
   return (
     <div className="App">
       <UserContext.Provider value={{
@@ -22,7 +24,9 @@ function App() {
         userActive,
         setUser: setUserActive,
         room:rooms,
-        setRoom:setRooms
+        setRoom:setRooms,
+        activeRoom: activeRoom,
+        setActiveRoom: setActiveRoom
       }}>
         
         <Router>

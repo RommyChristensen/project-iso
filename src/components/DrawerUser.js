@@ -62,7 +62,7 @@ const fabStyle = {
 }
 
 const DrawerUser = (props) => {
-    const { userActive, setUser, room, setRoom ,activeDoc ,setDoc} = React.useContext(UserContext);
+    const { userActive, setUser, room, setRoom ,activeDoc ,setDoc, activeRoom, setActiveRoom} = React.useContext(UserContext);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
 
@@ -142,18 +142,29 @@ const DrawerUser = (props) => {
         setRoom(await getRoom(userActive.username));
         toggleEdit()
         alert("Success Editing")
+    }
 
+    const handleOnRoomClick = async (id) => {
+      const q = doc(fire, 'room', id);
+      const data = await getDoc(q);
 
+      const room = {
+        id: data.id,
+        chats: data.data().chats,
+        fname: data.data().fname,
+        lname: data.data().lname,
+        user1: data.data().user1,
+        user2: data.data().user2
+      }
 
-
+      setActiveRoom(room);
     }
     
     const listRoom = ()=>{
       var list = [];
-      console.log(room);
-        room.forEach(item => {
+        room.forEach((item, idx) => {
           list.push(
-          <ListItem button key="test">
+          <ListItem button key={"r-" + idx} onClick={() => handleOnRoomClick(item.id)}>
             <ListItemIcon>
               { Object.keys(item).length == 0 ? <Skeleton variant="circular" /> : <Avatar sx={{ bgcolor: "#FF7878" }}>{item.fname[0].toUpperCase()+item.lname[0].toUpperCase()}</Avatar>}
             </ListItemIcon>

@@ -7,4 +7,6 @@ export const UserContext = React.createContext({
     setUser: () => {},
     room:{},
     setRoom:() => {},
+    activeRoom: {},
+    setActiveRoom: {}
 });

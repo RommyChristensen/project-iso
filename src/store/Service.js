@@ -10,7 +10,15 @@ import { fire } from '../config/firebase';
     await data.forEach(async function  (doc) {
         // doc.data() is never undefined for query doc snapshots
         if(doc.data().user1==user || doc.data().user2==user){
-           room.push(doc.data());
+          const temp = {
+            id: doc.id,
+            chats: doc.data().chats,
+            fname: doc.data().fname,
+            lname: doc.data().lname,
+            user1: doc.data().user1,
+            user2: doc.data().user2
+          }
+          room.push(temp);
         }
         
     });

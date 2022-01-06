@@ -114,7 +114,7 @@ export default function SignUp() {
         
         if(await checkUsername(data.get('username'))){
             await insertNewUser(firstname, lastname, password, username,bio);
-            navigate('/home', { replace: true });
+            navigate('/login', { replace: true });
         }else{
             Toastify({
                 text: "Username already been used",

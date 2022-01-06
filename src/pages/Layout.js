@@ -21,6 +21,7 @@ import Container from '@mui/material/Container';
 import DrawerUser from '../components/DrawerUser';
 import { UserContext } from '../config/UserContext';
 import { useNavigate } from 'react-router-dom';
+import UserChat from '../components/UserChat';
 
 const drawerWidth = 350;
 const Layout = (props) => {
@@ -103,45 +104,7 @@ const Layout = (props) => {
         </Drawer>
       </Box>
       <Box style={{height:'auto',width:'90%' , backgroundColor:'lightgrey'}} component="main" >
-          <Grid item style={{width:'90%',height:'700px',marginLeft:'10px', marginRight:'10px', backgroundColor:''}}>
-            <Card style={{position:"absolute", top:"80px", float:"left"}} sx={{ minWidth: 275 }}>
-              <CardContent>
-                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                  Word of the Day
-                </Typography>
-              </CardContent>
-            </Card>
-            <Card style={{position:"absolute", top:"120px", right:10}} sx={{ minWidth: 275 }}>
-              <CardContent>
-                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                  Word of the Day
-                </Typography>
-              </CardContent>
-            </Card>
-            <Card style={{position:"absolute", top:"220px", right:10}} sx={{ minWidth: 275 }}>
-              <CardContent>
-                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                  Word of the Day
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item style={{width:"80%",position:"absolute",bottom:'10px',marginLeft:'10px', marginRight:'10px'}}>
-              {/* <Grid item style={{flex:3, width:"60%"}} > */}
-                  <TextField style={{width:"90%",backgroundColor:"white"}} hiddenLabel fullWidth id="standard-basic" placeholder='Enter A Message' variant="standard"  />
-
-              {/* </Grid> */}
-              {/* <Grid item style={{flex:1,width:"40%"}}  > */}
-              <Button style={{width:"10%"}}
-                onClick={() => {
-                  alert('clicked');
-                }}
-              >
-                SEND
-              </Button>
-              {/* </Grid> */}
-          </Grid>
-
+          <UserChat />
       </Box>
     </Box>
   );
