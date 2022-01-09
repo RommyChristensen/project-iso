@@ -25,7 +25,18 @@ import { UserContext } from '../config/UserContext';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import TextField from '@mui/material/TextField';
 import { render } from '@testing-library/react';
-import {updateDoc, doc, getDoc, collection, addDoc,where,query,getDocs} from 'firebase/firestore/lite';
+import {
+    updateDoc,
+    doc,
+    getDoc,
+    collection,
+    addDoc,
+    where,
+    query,
+    getDocs,
+    orderBy,
+    startAt, endAt
+} from 'firebase/firestore/lite';
 import { fire } from '../config/firebase';
 import Button from '@mui/material/Button';
 import getRoom from "../store/Service";
@@ -62,7 +73,7 @@ const fabStyle = {
 }
 
 const DrawerUser = (props) => {
-    const { userActive, setUser, room, setRoom ,activeDoc ,setDoc, activeRoom, setActiveRoom} = React.useContext(UserContext);
+    const { searchResultRoom,setSearchResultRoom ,userActive, setUser, room, setRoom ,activeDoc ,setDoc, activeRoom, setActiveRoom} = React.useContext(UserContext);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
 
@@ -225,6 +236,35 @@ const DrawerUser = (props) => {
       });
       return ada;
     }
+    async function searchChat(event){
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        const message = data.get('searchMessage')
+        if(message == ''){
+            setRoom(await getRoom(userActive.username))
+        }else{
+            const tempRoom = [];
+            room.forEach(function (r){
+                console.log({
+                    room :r,
+                    chat :r.chats.length
+                })
+
+                for(let i=0;i<r.chats.length;i++){
+                    if(r.chats[i].message.includes(message)){
+                        tempRoom.push(r);
+                        break
+                    }
+                }
+            })
+            console.log(tempRoom)
+            setRoom(tempRoom)
+        }
+
+
+
+    }
+
     function SortingData(data) {
       for (let i = 0; i < data.length-1; i++) {
         for (let j = i+1; j < data.length; j++) {
@@ -264,6 +304,7 @@ const DrawerUser = (props) => {
       room.push(newRoom);
       SortingData(room);
       setRoom(room);
+
 
       const db = collection(fire, 'room');
       const res = await addDoc(db, newRoom);
@@ -308,7 +349,13 @@ const DrawerUser = (props) => {
             </Grid>
         </Grid>
       </Toolbar>
-      <Divider />
+        <Divider/>
+        <form onSubmit={searchChat} style={{padding:"15px"}}>
+        <TextField name="searchMessage" id="outlined-basic-search"
+                   label="Search Message" variant="outlined" autoFocus style={{width:"100%"}}  />
+            <small>*Submit an empty value to get all chat</small>
+        </form>
+        <Divider/>
       <List>
        {
          listRoom()

@@ -92,7 +92,6 @@ const UserChat = () => {
     const generateMessages = () => {
         console.log("chats", activeRoom.chats);
         const chats = activeRoom.chats;
-
         if(activeRoom.chats){
             return chats.map(c => {
                 if(c.from === userActive.username) {
