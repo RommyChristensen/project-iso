@@ -13,8 +13,10 @@ import { fire } from '../config/firebase';
           const temp = {
             id: doc.id,
             chats: doc.data().chats,
-            fname: doc.data().fname,
-            lname: doc.data().lname,
+            fname1: doc.data().fname1,
+            lname1: doc.data().lname1,
+            fname2: doc.data().fname2,
+            lname2: doc.data().lname2,
             user1: doc.data().user1,
             user2: doc.data().user2
           }

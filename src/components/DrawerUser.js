@@ -175,13 +175,21 @@ const DrawerUser = (props) => {
       const q = doc(fire, 'room', id);
       const data = await getDoc(q);
 
+      const q2 = query(collection(fire, 'user'), where('username', '==', (data.data().user1 == userActive.username) ? data.data().user2 : data.data().user1));
+      const dataUser = await getDocs(q2);
+
+      console.log(dataUser.docs[0].data());
+
       const room = {
         id: data.id,
         chats: data.data().chats,
-        fname: data.data().fname,
-        lname: data.data().lname,
+        fname1: data.data().fname1,
+        lname1: data.data().lname1,
+        fname2: data.data().fname2,
+        lname2: data.data().lname2,
         user1: data.data().user1,
-        user2: data.data().user2
+        user2: data.data().user2,
+        bio: dataUser.docs[0].data().bio
       }
 
       setActiveRoom(room);
@@ -199,10 +207,10 @@ const DrawerUser = (props) => {
             </ListItemIcon>
             <Grid container direction="column">
               <Typography variant="subtitle2" sx={{ marginLeft: 1, textStyle: "bold" }}>
-              { Object.keys(item).length == 0 ? <Skeleton /> : item.fname+" "+item.lname}
+               { Object.keys(item).length == 0 ? <Skeleton /> : (userActive.username == item.user1 ? item.fname2 + " " + item.lname2 : item.fname1 + " " + item.lname1) }
               </Typography>
               <Typography variant="body2" sx={{ marginLeft: 1 }}>
-              { Object.keys(item).length == 0 ? <Skeleton /> : item.chats[item.chats.length-1].message}
+               { Object.keys(item).length == 0 ? <Skeleton /> : item.chats[item.chats.length-1].message}
               </Typography>
             </Grid>
           </ListItem>
@@ -306,8 +314,10 @@ const DrawerUser = (props) => {
         newRoom = {
           "user1":userActive.username,
           "user2":selectContact.username,
-          "fname":item2.data().firstname,
-          "lname":item2.data().lastname,
+          "fname2":item2.data().firstname,
+          "lname2":item2.data().lastname,
+          "fname1": userActive.firstname,
+          "lname1": userActive.lastname,
           "chats":[
             {
               "from":userActive.username,

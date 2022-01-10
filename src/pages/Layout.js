@@ -59,10 +59,16 @@ const Layout = (props) => {
                 </Grid>
                 <Grid item sx={{ width: '86%' }}>
                     <Typography variant="subtitle2" sx={{ marginLeft: 1, textStyle: "bold" }}>
-                        {activeRoom.fname + " "+ activeRoom.lname}
+                      {
+                        (userActive.username == activeRoom.user1 ? activeRoom.fname2 + " " + activeRoom.lname2 : activeRoom.fname1 + " " + activeRoom.lname1)
+                      }
+                        
+                        {/* {activeRoom.fname + " "+ activeRoom.lname} */}
                     </Typography>
                     <Typography variant="body2" sx={{ marginLeft: 1 }}>
-                        Hey there i'm using chat in
+                        {
+                          (activeRoom.bio)
+                        }
                     </Typography>
                 </Grid>
                 <Grid container item xs={1} justifyContent='flex-end' alignItems="right" sx={{ width: '10%' }}>

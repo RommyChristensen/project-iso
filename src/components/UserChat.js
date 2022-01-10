@@ -8,6 +8,7 @@ import { UserContext } from "../config/UserContext";
 import { Grid, Card, CardContent, Typography, Button, TextField } from '@mui/material';
 import getRoom from "../store/Service";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { LocalConvenienceStoreOutlined } from '@mui/icons-material';
 
 const leftStyle = {
     // position:"", 
@@ -36,12 +37,17 @@ const UserChat = () => {
     const { userActive, setUser, room, setRoom, activeRoom, setActiveRoom } = useContext(UserContext);
     const [ text, setText ] = useState('');
     const [selectContact, setSelectContact] = React.useState({});
+
     
-    const getMessages = () => {
-        if(activeRoom){
-            const doc = fire.collection('room').doc(activeRoom.id);
+    const getMessages = async () => {
+        if(Object.keys(activeRoom).length !== 0){
+            const q = doc(fire, 'room', activeRoom.id);
+            const data = await getDoc(q);
+            console.log(data.data().chats);
+            setActiveRoom({ ...activeRoom, chats: data.data().chats })
         }
     }
+    
     async function  sendChat(event){
         event.preventDefault();
         const data = new FormData(event.currentTarget);
