@@ -52,7 +52,9 @@ const Layout = (props) => {
         <Toolbar>
             <Grid container>
                 <Grid item sx={{ width: '4%' }}>
-                    <Avatar sx={{ bgcolor: "#FFFFFF", color: "black" }}>{"DS"}</Avatar>
+                    <Avatar sx={{ bgcolor: "#FFFFFF", color: "black" }}>
+                    <img src={activeRoom.profile}  id="Profile" style={{width:"100%",height:"100%",borderRadius:"100%",objectFit: "cover"}}></img>
+                    </Avatar>
                     {/* activeRoom!=null ? activeRoom.fname[0]+activeRoom.lname[0] :"DS" */}
                 </Grid>
                 <Grid item sx={{ width: '86%' }}>

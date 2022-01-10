@@ -194,7 +194,7 @@ const DrawerUser = (props) => {
           <ListItem button key={"r-" + idx} onClick={() => handleOnRoomClick(item.id)}>
             <ListItemIcon>
             <Avatar sx={{ bgcolor: "#FF7878" }}>
-                  <img src={userActive.profile}  id="Profile"></img>
+            <img src={item.profile}  id="Profile" style={{width:"100%",height:"100%",borderRadius:"100%",objectFit: "cover"}}></img>
                 </Avatar>
             </ListItemIcon>
             <Grid container direction="column">
@@ -223,7 +223,7 @@ const DrawerUser = (props) => {
               <ListItem>
                   <ListItemIcon>
                     <Avatar sx={{ bgcolor: "#FF7878" }}>
-                    <img src={userActive.profile}  id="Profile"></img>
+                    <img src={item.profile}  id="Profile" style={{width:"100%",height:"100%",borderRadius:"100%",objectFit: "cover"}}></img>
                   </Avatar>
                   </ListItemIcon>
                   <Grid container>
@@ -334,7 +334,7 @@ const DrawerUser = (props) => {
          <Grid container>
             <Grid item xs={2}>
                 <Avatar sx={{ bgcolor: "#FF7878" }}>
-                  <img src={userActive.profile}  id="Profile"></img>
+                  <img src={userActive.profile}  id="Profile" style={{width:"100%",height:"100%",borderRadius:"100%",objectFit: "cover"}}></img>
                 </Avatar>
             </Grid>
             <Grid item xs={9}>
