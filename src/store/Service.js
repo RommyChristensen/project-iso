@@ -25,22 +25,6 @@ import { fire } from '../config/firebase';
         
     });
     SortingData(room);
-    (await room).forEach(async function (item) {
-        var user_id;
-        // doc.data() is never undefined for query doc snapshots
-        if(item.user1==user){
-          user_id = item.user2;
-        }
-        else if(item.user2==user){
-          user_id = item.user1;
-        }
-        const data_user = await getDocs(query(collection(fire, 'user'),where('username','==',user_id)));
-        (await data_user).forEach(function(item2) {
-          console.log(item2.data());
-          item["fname"]=item2.data().firstname;
-          item["lname"]=item2.data().lastname;
-        });
-    });
     return room;
   }
   function SortingData(data) {
