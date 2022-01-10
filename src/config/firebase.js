@@ -11,11 +11,12 @@ const firebaseConfig = {
   projectId: "chatin-ea635",
   storageBucket: "chatin-ea635.appspot.com",
   messagingSenderId: "784170283393",
-  appId: "1:784170283393:web:c522503e49f66858b3f880"
+  appId: "1:784170283393:web:c522503e49f66858b3f880",
+  storageBucket:"gs://chatin-ea635.appspot.com"
 };
 
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
-export const fire = getFirestore(app);
+const fire = getFirestore(app);
+export {fire,app};

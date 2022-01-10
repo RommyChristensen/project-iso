@@ -25,6 +25,7 @@ import { UserContext } from '../config/UserContext';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import TextField from '@mui/material/TextField';
 import { render } from '@testing-library/react';
+import { getStorage, ref,uploadBytes,uploadTask,getDownloadURL} from "firebase/storage";
 import {
     updateDoc,
     doc,
@@ -37,11 +38,12 @@ import {
     orderBy,
     startAt, endAt
 } from 'firebase/firestore/lite';
-import { fire } from '../config/firebase';
+import { fire,app } from '../config/firebase';
 import Button from '@mui/material/Button';
 import getRoom from "../store/Service";
 import { FormControlLabel, Radio, RadioGroup } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+
 const modalStyle = {
   position: 'absolute',
   top: '50%',
@@ -73,7 +75,7 @@ const fabStyle = {
 }
 
 const DrawerUser = (props) => {
-    const { searchResultRoom,setSearchResultRoom ,userActive, setUser, room, setRoom ,activeDoc ,setDoc, activeRoom, setActiveRoom} = React.useContext(UserContext);
+    const {searchResultRoom,setSearchResultRoom , userActive, setUser, room, setRoom ,activeDoc ,setDoc, activeRoom, setActiveRoom} = React.useContext(UserContext);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
 
@@ -83,6 +85,8 @@ const DrawerUser = (props) => {
     const [openModalProfile, setOpenModalProfile] = React.useState(false);
     const [openModalNewRoom, setOpenModalNewRoom] = React.useState(false);
     const [selectContact, setSelectContact] = React.useState({});
+
+   
 
     const handleChange = (event, newValue) => {
       setValue(newValue);
@@ -133,19 +137,31 @@ const DrawerUser = (props) => {
     }
 
     const toggleEdit = ()=> setEditingProfile(!editingProfile);
+    const storage = getStorage(app);
+    
     async function procesEditProfile(){
         let firstName = document.getElementById('firstName').value;
         let lastName = document.getElementById('lastName').value;
         let bio = document.getElementById('bio').value;
-
+        let gambar = document.getElementById('images');
+        const metadata = {
+          contentType: 'image/jpeg',
+        };
+        
+        const refs = ref(storage, 'images/'+gambar.files[0].name);
+        const uploadTask = await uploadBytes(refs,gambar.files[0]);
         const q = doc(fire, 'user', userActive.id);
+        var url = await getDownloadURL(ref(storage, 'images/'+gambar.files[0].name ));
+          const img = document.getElementById('Profile');
+          img.setAttribute('src', url);
+        
         await updateDoc(q, {
             firstname :firstName ,
             lastname : lastName,
-            bio : bio
+            bio : bio,
+            profile: url
         })
         const temp = await getDoc(q)
-        console.log(temp);
         setDoc(temp)
         const user = temp.data();
         user['id'] = temp.id;
@@ -177,7 +193,9 @@ const DrawerUser = (props) => {
           list.push(
           <ListItem button key={"r-" + idx} onClick={() => handleOnRoomClick(item.id)}>
             <ListItemIcon>
-              { Object.keys(item).length == 0 ? <Skeleton variant="circular" /> : <Avatar sx={{ bgcolor: "#FF7878" }}>{item.fname[0].toUpperCase()+item.lname[0].toUpperCase()}</Avatar>}
+            <Avatar sx={{ bgcolor: "#FF7878" }}>
+                  <img src={userActive.profile}  id="Profile"></img>
+                </Avatar>
             </ListItemIcon>
             <Grid container direction="column">
               <Typography variant="subtitle2" sx={{ marginLeft: 1, textStyle: "bold" }}>
@@ -204,7 +222,9 @@ const DrawerUser = (props) => {
             list.push(
               <ListItem>
                   <ListItemIcon>
-                    <Avatar sx={{ bgcolor: "#FF7878" }}>{item.username.substring(0,2).toUpperCase()}</Avatar>
+                    <Avatar sx={{ bgcolor: "#FF7878" }}>
+                    <img src={userActive.profile}  id="Profile"></img>
+                  </Avatar>
                   </ListItemIcon>
                   <Grid container>
                       <Grid item xs={10}>
@@ -236,34 +256,32 @@ const DrawerUser = (props) => {
       });
       return ada;
     }
-    async function searchChat(event){
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        const message = data.get('searchMessage')
-        if(message == ''){
-            setRoom(await getRoom(userActive.username))
-        }else{
-            const tempRoom = [];
-            room.forEach(function (r){
-                console.log({
-                    room :r,
-                    chat :r.chats.length
-                })
+    async function searchChat(){
+      const message = document.getElementById('outlined-basic-search').value;
+      if(message == ''){
+          setRoom(await getRoom(userActive.username))
+      }else{
+          const tempRoom = [];
+          room.forEach(function (r){
+              console.log({
+                  room :r,
+                  chat :r.chats.length
+              })
 
-                for(let i=0;i<r.chats.length;i++){
-                    if(r.chats[i].message.includes(message)){
-                        tempRoom.push(r);
-                        break
-                    }
-                }
-            })
-            console.log(tempRoom)
-            setRoom(tempRoom)
-        }
+              for(let i=0;i<r.chats.length;i++){
+                  if(r.chats[i].message.includes(message)){
+                      tempRoom.push(r);
+                      break
+                  }
+              }
+          })
+          console.log(tempRoom)
+          setRoom(tempRoom)
+      }
 
 
 
-    }
+  }
 
     function SortingData(data) {
       for (let i = 0; i < data.length-1; i++) {
@@ -305,7 +323,6 @@ const DrawerUser = (props) => {
       SortingData(room);
       setRoom(room);
 
-
       const db = collection(fire, 'room');
       const res = await addDoc(db, newRoom);
       handleCloseModalNewRoom();
@@ -316,7 +333,9 @@ const DrawerUser = (props) => {
       <Toolbar>
          <Grid container>
             <Grid item xs={2}>
-                <Avatar sx={{ bgcolor: "#FF7878" }}>{ Object.keys(userActive).length == 0 ? <Skeleton /> : getAvatar()}</Avatar>
+                <Avatar sx={{ bgcolor: "#FF7878" }}>
+                  <img src={userActive.profile}  id="Profile"></img>
+                </Avatar>
             </Grid>
             <Grid item xs={9}>
               <Typography variant="subtitle2" sx={{ marginLeft: 1, textStyle: "bold" }}>
@@ -349,12 +368,10 @@ const DrawerUser = (props) => {
             </Grid>
         </Grid>
       </Toolbar>
-        <Divider/>
-        <form onSubmit={searchChat} style={{padding:"15px"}}>
+      <Divider/>
         <TextField name="searchMessage" id="outlined-basic-search"
-                   label="Search Message" variant="outlined" autoFocus style={{width:"100%"}}  />
+                   label="Search Message" variant="outlined" autoFocus onKeyUp={searchChat} style={{width:"100%"}}  />
             <small>*Submit an empty value to get all chat</small>
-        </form>
         <Divider/>
       <List>
        {
@@ -410,12 +427,15 @@ const DrawerUser = (props) => {
                         <ModeEditIcon />
                     </Fab>
                     <Box sx={{display:'flex' , alignItems:'center', justifyContent: 'space-between'}}>
-                        <Avatar  sx={{ bgcolor: "#FF7878" }}>{ Object.keys(userActive).length == 0 ? <Skeleton /> : getAvatar()}</Avatar>
+
                         <TextField disabled={!editingProfile}  id='firstName' label="First Name" variant="outlined"  defaultValue={userActive.firstname}style={{marginLeft:'20px'}} />
                         <TextField disabled={!editingProfile}  id="lastName" label="Last Name" variant="outlined" defaultValue={userActive.lastname} />
                     </Box>
                     <Box marginY={'10px'}>
                         <TextField disabled={!editingProfile}  fullWidth id="bio" label="Bio" variant="outlined" defaultValue={userActive.bio} />
+                    </Box>
+                    <Box marginY={'10px'}>
+                      <input type="file" name="images"  id='images' disabled={!editingProfile} />
                     </Box>
                     {editingProfile && <Button fullWidth onClick={()=>procesEditProfile()} variant="contained">Edit</Button> }
                 </Box>

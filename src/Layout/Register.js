@@ -72,9 +72,9 @@ export default function SignUp() {
         return true;
     }
 
-    const insertNewUser = async (firstname, lastname, password, username, bio) => {
+    const insertNewUser = async (firstname, lastname, password, username, bio,profile) => {
         const user = {
-            firstname, lastname, password, username, bio, contacts: []
+            firstname, lastname, password, username, bio,profile, contacts: []
         };
         const db = collection(fire, 'user');
         const res = await addDoc(db, user);
@@ -113,7 +113,7 @@ export default function SignUp() {
         }
         
         if(await checkUsername(data.get('username'))){
-            await insertNewUser(firstname, lastname, password, username,bio);
+            await insertNewUser(firstname, lastname, password, username,bio,"https://firebasestorage.googleapis.com/v0/b/chatin-ea635.appspot.com/o/images%2F974631193279611.jpg?alt=media&token=d2379afb-76e3-4d0a-8c0e-e809e187387e");
             navigate('/login', { replace: true });
         }else{
             Toastify({
